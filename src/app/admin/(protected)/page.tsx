@@ -2,54 +2,68 @@ import Link from "next/link";
 import {
   PawPrint,
   PackageSearch,
-  BookOpenText,
-  Quote,
+  Wallet,
+  TrendingUp,
   ArrowRight,
+  AlertTriangle,
 } from "lucide-react";
 import { prisma } from "@/lib/db";
 import { formatPrice, orderStatusLabel } from "@/lib/format";
+import { getMonthlyRevenue } from "@/lib/reports";
+import { BarChart } from "@/components/admin/BarChart";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminDashboard() {
-  const [gliderCount, availableCount, pendingOrders, articleCount, testimonialCount, latestOrders] =
-    await Promise.all([
-      prisma.glider.count(),
-      prisma.glider.count({ where: { status: "tersedia" } }),
-      prisma.order.count({ where: { status: "menunggu" } }),
-      prisma.article.count(),
-      prisma.testimonial.count(),
-      prisma.order.findMany({ orderBy: { createdAt: "desc" }, take: 6 }),
-    ]);
+  const [
+    revenueAll,
+    soldAll,
+    pendingOrders,
+    stockAvailable,
+    latestOrders,
+    lowStock,
+    monthly,
+  ] = await Promise.all([
+    prisma.order.aggregate({ where: { status: "selesai" }, _sum: { amount: true } }),
+    prisma.order.count({ where: { status: "selesai" } }),
+    prisma.order.count({ where: { status: "menunggu" } }),
+    prisma.glider.aggregate({ where: { status: "tersedia" }, _sum: { stock: true } }),
+    prisma.order.findMany({ orderBy: { createdAt: "desc" }, take: 6 }),
+    prisma.glider.findMany({
+      where: { stock: 0, status: { not: "terjual" } },
+      take: 4,
+    }),
+    getMonthlyRevenue(6),
+  ]);
 
   const stats = [
     {
-      icon: PawPrint,
-      label: "Sugar Glider",
-      value: gliderCount,
-      hint: `${availableCount} tersedia`,
-      href: "/admin/gliders",
+      icon: Wallet,
+      label: "Total Pendapatan",
+      value: formatPrice(revenueAll._sum.amount ?? 0),
+      hint: "dari pesanan selesai",
+      tint: "bg-emerald-500/15 text-emerald-600",
+    },
+    {
+      icon: TrendingUp,
+      label: "Glider Terjual",
+      value: String(soldAll),
+      hint: "pesanan selesai",
+      tint: "bg-brand-soft text-brand-strong",
     },
     {
       icon: PackageSearch,
       label: "Pesanan Menunggu",
-      value: pendingOrders,
+      value: String(pendingOrders),
       hint: "perlu ditindaklanjuti",
-      href: "/admin/pesanan",
+      tint: "bg-amber-500/15 text-amber-600",
     },
     {
-      icon: BookOpenText,
-      label: "Artikel Blog",
-      value: articleCount,
-      hint: "konten edukasi",
-      href: "/admin/artikel",
-    },
-    {
-      icon: Quote,
-      label: "Testimoni",
-      value: testimonialCount,
-      hint: "ulasan adopter",
-      href: "/admin/testimoni",
+      icon: PawPrint,
+      label: "Stok Tersedia",
+      value: `${stockAvailable._sum.stock ?? 0} ekor`,
+      hint: "siap diadopsi",
+      tint: "bg-sky-500/15 text-sky-600",
     },
   ];
 
@@ -59,27 +73,89 @@ export default async function AdminDashboard() {
         Dashboard
       </h1>
       <p className="mt-1 text-sm text-muted">
-        Ringkasan kondisi website dan pesanan terbaru.
+        Ringkasan bisnis Anda hari ini.
       </p>
 
+      {/* Kartu statistik gaya Materio */}
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((s) => (
-          <Link
+          <div
             key={s.label}
-            href={s.href}
-            className="group rounded-3xl border border-line bg-surface p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
+            className="rounded-2xl border border-line bg-surface p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
           >
-            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-soft text-brand">
-              <s.icon className="h-5 w-5" />
-            </span>
-            <p className="mt-3 text-3xl font-bold">{s.value}</p>
-            <p className="text-sm font-semibold">{s.label}</p>
+            <div className="flex items-start justify-between">
+              <span className={`flex h-11 w-11 items-center justify-center rounded-xl ${s.tint}`}>
+                <s.icon className="h-5 w-5" />
+              </span>
+            </div>
+            <p className="mt-4 text-2xl font-bold leading-tight">{s.value}</p>
+            <p className="mt-0.5 text-sm font-semibold">{s.label}</p>
             <p className="text-xs text-muted">{s.hint}</p>
-          </Link>
+          </div>
         ))}
       </div>
 
-      <div className="mt-8 rounded-3xl border border-line bg-surface shadow-sm">
+      <div className="mt-6 grid gap-4 lg:grid-cols-3">
+        {/* Grafik pendapatan */}
+        <div className="rounded-2xl border border-line bg-surface p-6 shadow-sm lg:col-span-2">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="font-semibold">Pendapatan 6 Bulan Terakhir</h2>
+              <p className="text-xs text-muted">Dari pesanan berstatus selesai</p>
+            </div>
+            <Link
+              href="/admin/laporan"
+              className="inline-flex items-center gap-1 text-sm font-semibold text-brand hover:text-brand-strong"
+            >
+              Laporan lengkap <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+          <div className="mt-5">
+            <BarChart
+              data={monthly}
+              formatValue={(v) =>
+                v >= 1000000 ? `${(v / 1000000).toFixed(1)}jt` : v > 0 ? `${Math.round(v / 1000)}rb` : "0"
+              }
+            />
+          </div>
+        </div>
+
+        {/* Peringatan stok */}
+        <div className="rounded-2xl border border-line bg-surface p-6 shadow-sm">
+          <h2 className="flex items-center gap-2 font-semibold">
+            <AlertTriangle className="h-4.5 w-4.5 text-amber-500" />
+            Stok Habis
+          </h2>
+          {lowStock.length === 0 ? (
+            <p className="mt-4 text-sm text-muted">
+              Semua listing aktif masih punya stok. 👍
+            </p>
+          ) : (
+            <ul className="mt-4 space-y-2.5">
+              {lowStock.map((g) => (
+                <li key={g.id}>
+                  <Link
+                    href={`/admin/gliders/${g.id}`}
+                    className="flex items-center justify-between gap-2 rounded-xl bg-background px-4 py-3 text-sm transition-colors hover:bg-brand-soft"
+                  >
+                    <span className="font-semibold">{g.name}</span>
+                    <span className="text-xs text-muted">{g.morph}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+          <Link
+            href="/admin/gliders"
+            className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-brand hover:text-brand-strong"
+          >
+            Kelola stok <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+      </div>
+
+      {/* Pesanan terbaru */}
+      <div className="mt-6 rounded-2xl border border-line bg-surface shadow-sm">
         <div className="flex items-center justify-between border-b border-line px-6 py-4">
           <h2 className="font-semibold">Pesanan terbaru</h2>
           <Link

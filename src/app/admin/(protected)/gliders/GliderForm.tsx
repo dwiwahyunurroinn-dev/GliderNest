@@ -77,6 +77,21 @@ export function GliderForm({
             <option value="terjual">Terjual</option>
           </select>
         </div>
+        <div>
+          <label htmlFor="stock" className={labelCls}>
+            Stok (ekor){" "}
+            <span className="font-normal text-muted">— perubahan tercatat di laporan</span>
+          </label>
+          <input
+            id="stock"
+            name="stock"
+            type="number"
+            min={0}
+            required
+            defaultValue={glider?.stock ?? 1}
+            className={inputCls}
+          />
+        </div>
       </div>
 
       <div>

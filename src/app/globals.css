@@ -31,10 +31,46 @@
   --font-display: var(--font-fraunces);
 }
 
+/* ---------- Tema gelap (toggle di header & topbar admin) ---------- */
+html[data-theme="dark"] {
+  --background: #0f141d;
+  --foreground: #e7ecf5;
+  --surface: #171e2b;
+  --muted: #9aa8bf;
+  --line: #283349;
+  --brand: #4f8ef7;
+  --brand-strong: #82adff;
+  --brand-soft: #1d2a44;
+  --sky: #141b28;
+  --navy: #0a0f17;
+}
+
+/* ---------- Skin panel admin bergaya Materio (aksen ungu) ---------- */
+.admin-shell {
+  --brand: #8c57ff;
+  --brand-strong: #7444e4;
+  --brand-soft: #ede4ff;
+  --background: #f4f5fa;
+}
+html[data-theme="dark"] .admin-shell {
+  --brand: #9d75ff;
+  --brand-strong: #b899ff;
+  --brand-soft: #2b2350;
+  --background: #12101c;
+  --surface: #1a1726;
+  --line: #2e2a42;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-jakarta), system-ui, sans-serif;
+}
+
+@media print {
+  body {
+    background: #ffffff;
+  }
 }
 
 ::selection {

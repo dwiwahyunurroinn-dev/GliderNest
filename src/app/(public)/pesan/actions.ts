@@ -28,7 +28,7 @@ export async function createOrder(formData: FormData): Promise<void> {
   }
 
   const glider = await prisma.glider.findUnique({ where: { slug: gliderSlug } });
-  if (!glider || glider.status !== "tersedia") {
+  if (!glider || glider.status !== "tersedia" || glider.stock < 1) {
     redirect(`/pesan?error=tidak-tersedia`);
   }
 
@@ -46,10 +46,38 @@ export async function createOrder(formData: FormData): Promise<void> {
     },
   });
 
+  // Kurangi stok; jika habis, tandai listing "dipesan".
+  const newStock = glider.stock - 1;
   await prisma.glider.update({
     where: { id: glider.id },
-    data: { status: "dipesan" },
+    data: { stock: newStock, status: newStock === 0 ? "dipesan" : "tersedia" },
   });
+  await prisma.stockLog.create({
+    data: {
+      gliderId: glider.id,
+      change: -1,
+      type: "keluar",
+      note: `Pesanan ${order.code}`,
+    },
+  });
+
+  // Notifikasi untuk admin.
+  await prisma.notification.create({
+    data: {
+      title: "Pesanan baru masuk",
+      message: `${order.code} — ${order.gliderName} oleh ${customerName}`,
+      link: "/admin/pesanan",
+    },
+  });
+  if (newStock === 0) {
+    await prisma.notification.create({
+      data: {
+        title: "Stok habis",
+        message: `Stok ${glider.name} (${glider.morph}) habis setelah pesanan ${order.code}.`,
+        link: "/admin/gliders",
+      },
+    });
+  }
 
   redirect(`/pesan/${order.code}`);
 }

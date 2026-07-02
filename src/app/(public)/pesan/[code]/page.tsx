@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
+import { FileText } from "lucide-react";
 import {
   CheckCircle2,
   Copy,
@@ -302,6 +304,16 @@ export default async function OrderDetailPage({
             }
           />
         </div>
+      </div>
+
+      <div className="mt-6 flex justify-center">
+        <Link
+          href={`/pesan/${order.code}/invoice`}
+          className="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-6 py-3 text-sm font-semibold transition-colors hover:border-brand hover:text-brand-strong"
+        >
+          <FileText className="h-4 w-4" />
+          Lihat & Cetak Invoice
+        </Link>
       </div>
 
       <p className="mt-6 text-center text-xs text-muted">

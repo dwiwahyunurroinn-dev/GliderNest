@@ -12,22 +12,45 @@ datasource db {
 }
 
 model Glider {
-  id          String   @id @default(cuid())
-  slug        String   @unique
+  id          String     @id @default(cuid())
+  slug        String     @unique
   name        String
   morph       String
   sex         String // "jantan" | "betina"
   ageMonths   Int
   price       Int
-  status      String   @default("tersedia") // tersedia | dipesan | terjual
+  status      String     @default("tersedia") // tersedia | dipesan | terjual
+  stock       Int        @default(1) // jumlah ekor yang tersedia pada listing ini
   description String
   lineage     String
   traits      String // dipisah koma
-  imageUrl    String   @default("")
-  featured    Boolean  @default(false)
+  imageUrl    String     @default("")
+  featured    Boolean    @default(false)
   orders      Order[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  stockLogs   StockLog[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+// Riwayat pergerakan stok — dasar laporan "stok masuk per periode".
+model StockLog {
+  id        String   @id @default(cuid())
+  glider    Glider   @relation(fields: [gliderId], references: [id], onDelete: Cascade)
+  gliderId  String
+  change    Int // positif = masuk, negatif = keluar
+  type      String // masuk | keluar
+  note      String   @default("")
+  createdAt DateTime @default(now())
+}
+
+// Notifikasi untuk admin (pesanan baru, stok habis, dll).
+model Notification {
+  id        String   @id @default(cuid())
+  title     String
+  message   String
+  link      String   @default("")
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
 }
 
 model Article {

@@ -22,7 +22,7 @@ function formatPhoneDisplay(whatsapp: string): string {
 
 export function SiteFooter({ settings }: { settings: Settings }) {
   return (
-    <footer className="mt-auto bg-navy text-blue-100/75">
+    <footer className="mt-auto bg-navy text-blue-100/75 print:hidden">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-4">
         <div className="md:col-span-2">
           <div className="flex items-center gap-2.5 text-white">

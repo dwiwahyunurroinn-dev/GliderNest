@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Menu, X, ShoppingBag } from "lucide-react";
 import { BrandMark } from "./BrandMark";
+import { ThemeToggle } from "./ThemeToggle";
 
 const navItems = [
   { href: "/", label: "Beranda" },
@@ -28,7 +29,7 @@ export function SiteHeader({
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-line bg-background/85 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-line bg-background/85 backdrop-blur-md print:hidden">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
         <Link href="/" className="flex items-center gap-2.5" onClick={() => setOpen(false)}>
           <span className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-brand-soft ring-1 ring-line">
@@ -64,17 +65,21 @@ export function SiteHeader({
             <ShoppingBag className="h-4 w-4" />
             Pesan Sekarang
           </Link>
+          <ThemeToggle className="ml-2" />
         </nav>
 
-        <button
-          type="button"
-          aria-label={open ? "Tutup menu" : "Buka menu"}
-          aria-expanded={open}
-          onClick={() => setOpen((v) => !v)}
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-line xl:hidden"
-        >
-          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </button>
+        <div className="flex items-center gap-2 xl:hidden">
+          <ThemeToggle />
+          <button
+            type="button"
+            aria-label={open ? "Tutup menu" : "Buka menu"}
+            aria-expanded={open}
+            onClick={() => setOpen((v) => !v)}
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-line"
+          >
+            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+        </div>
       </div>
 
       {open && (

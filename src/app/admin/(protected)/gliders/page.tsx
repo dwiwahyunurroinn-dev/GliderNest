@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { Plus, Pencil } from "lucide-react";
+import { Plus, Pencil, Minus } from "lucide-react";
 import { prisma } from "@/lib/db";
 import { formatPrice } from "@/lib/format";
 import { StatusPill } from "@/components/StatusPill";
 import { DeleteButton } from "@/components/admin/DeleteButton";
 import { btnPrimary } from "@/components/admin/ui";
-import { deleteGlider } from "./actions";
+import { adjustStock, deleteGlider } from "./actions";
 
 export const dynamic = "force-dynamic";
 
@@ -39,6 +39,7 @@ export default async function AdminGlidersPage() {
                 <th className="px-5 py-3">Nama</th>
                 <th className="px-5 py-3">Morph</th>
                 <th className="px-5 py-3">Harga</th>
+                <th className="px-5 py-3">Stok</th>
                 <th className="px-5 py-3">Status</th>
                 <th className="px-5 py-3">Unggulan</th>
                 <th className="px-5 py-3 text-right">Aksi</th>
@@ -50,6 +51,31 @@ export default async function AdminGlidersPage() {
                   <td className="px-5 py-3.5 font-semibold">{g.name}</td>
                   <td className="px-5 py-3.5">{g.morph}</td>
                   <td className="px-5 py-3.5">{formatPrice(g.price)}</td>
+                  <td className="px-5 py-3.5">
+                    <span className="inline-flex items-center gap-1.5">
+                      <form action={adjustStock.bind(null, g.id, -1)}>
+                        <button
+                          type="submit"
+                          aria-label={`Kurangi stok ${g.name}`}
+                          className="flex h-6 w-6 items-center justify-center rounded-full border border-line text-muted transition-colors hover:border-brand hover:text-brand-strong"
+                        >
+                          <Minus className="h-3 w-3" />
+                        </button>
+                      </form>
+                      <span className={`w-7 text-center font-bold ${g.stock === 0 ? "text-red-500" : ""}`}>
+                        {g.stock}
+                      </span>
+                      <form action={adjustStock.bind(null, g.id, 1)}>
+                        <button
+                          type="submit"
+                          aria-label={`Tambah stok ${g.name}`}
+                          className="flex h-6 w-6 items-center justify-center rounded-full border border-line text-muted transition-colors hover:border-brand hover:text-brand-strong"
+                        >
+                          <Plus className="h-3 w-3" />
+                        </button>
+                      </form>
+                    </span>
+                  </td>
                   <td className="px-5 py-3.5">
                     <StatusPill status={g.status} />
                   </td>
@@ -72,7 +98,7 @@ export default async function AdminGlidersPage() {
               ))}
               {gliders.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="px-5 py-10 text-center text-muted">
+                  <td colSpan={7} className="px-5 py-10 text-center text-muted">
                     Belum ada glider. Klik “Tambah Glider” untuk memulai.
                   </td>
                 </tr>

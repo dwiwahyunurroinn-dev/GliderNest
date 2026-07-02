@@ -1,4 +1,5 @@
-import { MessageCircle } from "lucide-react";
+import Link from "next/link";
+import { MessageCircle, FileText } from "lucide-react";
 import { prisma } from "@/lib/db";
 import {
   formatDate,
@@ -43,6 +44,14 @@ export default async function AdminOrdersPage() {
                 </p>
               </div>
               <div className="flex items-center gap-2">
+                <Link
+                  href={`/pesan/${o.code}/invoice`}
+                  target="_blank"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-line px-3.5 py-2 text-xs font-semibold text-muted transition-colors hover:border-brand hover:text-brand-strong"
+                >
+                  <FileText className="h-3.5 w-3.5" />
+                  Invoice
+                </Link>
                 <form
                   action={updateOrderStatus.bind(null, o.id)}
                   className="flex items-center gap-2"

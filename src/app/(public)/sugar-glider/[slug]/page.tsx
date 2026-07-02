@@ -94,6 +94,12 @@ export default async function GliderDetailPage({
                 {glider.ageMonths} bulan (OOP)
               </dd>
             </div>
+            <div>
+              <dt className="text-muted">Stok</dt>
+              <dd className="mt-0.5 font-semibold">
+                {glider.stock > 0 ? `${glider.stock} ekor` : "Habis"}
+              </dd>
+            </div>
             <div className="col-span-2">
               <dt className="text-muted">Silsilah</dt>
               <dd className="mt-0.5 font-semibold">{glider.lineage}</dd>

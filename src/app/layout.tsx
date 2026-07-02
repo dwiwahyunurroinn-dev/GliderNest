@@ -45,7 +45,15 @@ export default function RootLayout({
       lang="id"
       className={`${jakarta.variable} ${fraunces.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col">{children}</body>
+      <body className="flex min-h-full flex-col">
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "(function(){try{if(localStorage.getItem('gn-theme')==='dark')document.documentElement.dataset.theme='dark'}catch(e){}})();",
+          }}
+        />
+        {children}
+      </body>
     </html>
   );
 }

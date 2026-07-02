@@ -106,7 +106,7 @@ export default async function HomePage() {
           className="pointer-events-none absolute inset-0 h-full w-full object-cover"
         />
         {/* lapisan pemutih agar teks tetap jelas terbaca di atas foto */}
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-white/95 via-white/75 to-white/15" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-white/80 via-white/40 to-transparent" />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-background to-transparent" />
 
         <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 py-20 sm:px-6 md:grid-cols-[1.1fr_0.9fr] md:py-28">

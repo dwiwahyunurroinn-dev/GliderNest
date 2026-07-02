@@ -10,16 +10,21 @@ import {
   Settings,
   LogOut,
   ExternalLink,
+  Bell,
+  BarChart3,
 } from "lucide-react";
 import { requireAdmin } from "@/lib/auth";
+import { prisma } from "@/lib/db";
 import { getSettings } from "@/lib/settings";
 import { BrandMark } from "@/components/BrandMark";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { logout } from "./actions";
 
 const menu = [
   { href: "/admin", icon: LayoutDashboard, label: "Dashboard" },
-  { href: "/admin/gliders", icon: PawPrint, label: "Sugar Glider" },
+  { href: "/admin/gliders", icon: PawPrint, label: "Sugar Glider & Stok" },
   { href: "/admin/pesanan", icon: PackageSearch, label: "Pesanan" },
+  { href: "/admin/laporan", icon: BarChart3, label: "Laporan" },
   { href: "/admin/artikel", icon: BookOpenText, label: "Artikel Blog" },
   { href: "/admin/galeri", icon: Images, label: "Galeri" },
   { href: "/admin/testimoni", icon: Quote, label: "Testimoni" },
@@ -33,13 +38,16 @@ export default async function AdminLayout({
   children: React.ReactNode;
 }) {
   await requireAdmin();
-  const settings = await getSettings();
+  const [settings, unreadCount] = await Promise.all([
+    getSettings(),
+    prisma.notification.count({ where: { read: false } }),
+  ]);
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="admin-shell flex min-h-screen bg-background text-foreground">
       <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r border-line bg-surface p-5 md:flex">
         <Link href="/admin" className="flex items-center gap-2.5 px-2">
-          <span className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-brand-soft ring-1 ring-line">
+          <span className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-2xl bg-brand-soft ring-1 ring-line">
             <BrandMark logoUrl={settings.logoUrl} className="h-8 w-8" fallback="mascot" />
           </span>
           <span>
@@ -50,12 +58,12 @@ export default async function AdminLayout({
           </span>
         </Link>
 
-        <nav className="mt-8 flex-1 space-y-1">
+        <nav className="mt-8 flex-1 space-y-1 overflow-y-auto">
           {menu.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="flex items-center gap-3 rounded-2xl px-3.5 py-2.5 text-sm font-semibold text-muted transition-colors hover:bg-brand-soft hover:text-brand-strong"
+              className="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-semibold text-muted transition-colors hover:bg-brand-soft hover:text-brand-strong"
             >
               <item.icon className="h-4.5 w-4.5" />
               {item.label}
@@ -67,7 +75,7 @@ export default async function AdminLayout({
           <Link
             href="/"
             target="_blank"
-            className="flex items-center gap-3 rounded-2xl px-3.5 py-2.5 text-sm font-semibold text-muted transition-colors hover:bg-brand-soft hover:text-brand-strong"
+            className="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-semibold text-muted transition-colors hover:bg-brand-soft hover:text-brand-strong"
           >
             <ExternalLink className="h-4.5 w-4.5" />
             Lihat Website
@@ -75,7 +83,7 @@ export default async function AdminLayout({
           <form action={logout}>
             <button
               type="submit"
-              className="flex w-full items-center gap-3 rounded-2xl px-3.5 py-2.5 text-sm font-semibold text-red-500 transition-colors hover:bg-red-50"
+              className="flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-semibold text-red-500 transition-colors hover:bg-red-500/10"
             >
               <LogOut className="h-4.5 w-4.5" />
               Keluar
@@ -84,30 +92,67 @@ export default async function AdminLayout({
         </div>
       </aside>
 
-      <div className="flex-1">
-        {/* Bar navigasi mobile */}
-        <div className="sticky top-0 z-40 flex items-center gap-1 overflow-x-auto border-b border-line bg-surface px-3 py-2 md:hidden">
-          {menu.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="flex shrink-0 items-center gap-1.5 rounded-full px-3 py-2 text-xs font-semibold text-muted hover:bg-brand-soft hover:text-brand-strong"
-            >
-              <item.icon className="h-3.5 w-3.5" />
-              {item.label}
-            </Link>
-          ))}
-          <form action={logout} className="shrink-0">
-            <button
-              type="submit"
-              className="flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-semibold text-red-500"
-            >
-              <LogOut className="h-3.5 w-3.5" />
-              Keluar
-            </button>
-          </form>
-        </div>
-        <div className="mx-auto max-w-5xl p-5 sm:p-8">{children}</div>
+      <div className="flex min-w-0 flex-1 flex-col">
+        {/* Topbar */}
+        <header className="sticky top-0 z-40 border-b border-line bg-surface/85 backdrop-blur">
+          <div className="flex h-14 items-center justify-between gap-3 px-4 sm:px-6">
+            {/* menu mobile */}
+            <nav className="flex items-center gap-1 overflow-x-auto md:hidden">
+              {menu.slice(0, 4).map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1.5 text-xs font-semibold text-muted hover:bg-brand-soft hover:text-brand-strong"
+                >
+                  <item.icon className="h-3.5 w-3.5" />
+                  {item.label.split(" ")[0]}
+                </Link>
+              ))}
+            </nav>
+            <p className="hidden text-sm font-semibold text-muted md:block">
+              Selamat bekerja 👋 Kelola {settings.siteName} dari sini.
+            </p>
+            <div className="flex items-center gap-2">
+              <Link
+                href="/admin/notifikasi"
+                aria-label={`Notifikasi${unreadCount > 0 ? ` (${unreadCount} belum dibaca)` : ""}`}
+                className="relative flex h-10 w-10 items-center justify-center rounded-full border border-line bg-surface text-muted transition-colors hover:border-brand hover:text-brand-strong"
+              >
+                <Bell className="h-4.5 w-4.5" />
+                {unreadCount > 0 && (
+                  <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
+                    {unreadCount > 9 ? "9+" : unreadCount}
+                  </span>
+                )}
+              </Link>
+              <ThemeToggle />
+            </div>
+          </div>
+          {/* baris menu mobile lanjutan */}
+          <nav className="flex items-center gap-1 overflow-x-auto border-t border-line px-3 py-1.5 md:hidden">
+            {menu.slice(4).map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1.5 text-xs font-semibold text-muted hover:bg-brand-soft hover:text-brand-strong"
+              >
+                <item.icon className="h-3.5 w-3.5" />
+                {item.label.split(" ")[0]}
+              </Link>
+            ))}
+            <form action={logout} className="shrink-0">
+              <button
+                type="submit"
+                className="flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-xs font-semibold text-red-500"
+              >
+                <LogOut className="h-3.5 w-3.5" />
+                Keluar
+              </button>
+            </form>
+          </nav>
+        </header>
+
+        <div className="mx-auto w-full max-w-6xl flex-1 p-5 sm:p-8">{children}</div>
       </div>
     </div>
   );
