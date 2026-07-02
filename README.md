@@ -26,12 +26,13 @@ sekali, kemudian `npm run dev` seperti biasa.
 | --- | --- |
 | `/` | Beranda: hero + maskot, keunggulan, joey unggulan, galeri berjalan, blog, testimoni |
 | `/sugar-glider` | Katalog dengan filter status + halaman detail per glider |
+| `/tentang-kami` | Profil peternakan: cerita, misi, standar, dan ajakan kunjungan |
 | `/blog` | Blog edukasi (artikel dikelola dari admin) |
 | `/galeri` | Galeri foto (dikelola dari admin) |
 | `/testimoni` | Testimoni adopter (dikelola dari admin) |
 | `/reseller` | Program reseller: benefit & syarat kemitraan |
 | `/cara-memesan` | Panduan memesan + metode pembayaran |
-| `/pesan` | **Form pemesanan** → kode pesanan + instruksi pembayaran (QRIS / transfer / DANA) |
+| `/pesan` | **Form pemesanan** → kode pesanan + instruksi pembayaran (QRIS / transfer / DANA / COD / rekber) |
 | `/kontak` | Kontak, Google Maps, dan FAQ |
 
 ## Panel admin — `/admin`
@@ -46,8 +47,9 @@ Password bawaan: **`glidernest123`** (ganti lewat file `.env`, lihat
 - **CRUD Artikel** — tulis konten blog edukasi
 - **CRUD Galeri** — unggah/hapus foto
 - **CRUD Testimoni** — tambah, tampilkan/sembunyikan, hapus
-- **Pengaturan Website** — nama situs, WhatsApp, Instagram, alamat,
-  **link embed Google Maps**, gambar **QRIS**, rekening bank, nomor DANA
+- **Pengaturan Website** — nama situs, **logo & gambar maskot kustom**,
+  WhatsApp, Instagram, alamat, **link embed Google Maps**, gambar **QRIS**,
+  rekening bank, nomor DANA, **area COD**, dan **daftar jasa rekber**
 
 ## Tentang pembayaran
 

@@ -16,7 +16,7 @@ import { prisma } from "@/lib/db";
 import { getSettings, waLink } from "@/lib/settings";
 import { formatDate } from "@/lib/format";
 import { GliderCard } from "@/components/GliderCard";
-import { Mascot } from "@/components/Mascot";
+import { MascotDisplay } from "@/components/BrandMark";
 import { Reveal } from "@/components/Reveal";
 import { SectionHeading } from "@/components/SectionHeading";
 
@@ -171,7 +171,10 @@ export default async function HomePage() {
           <div className="relative hidden items-center justify-center md:flex">
             <div className="absolute h-80 w-80 rounded-full bg-gradient-to-br from-brand/40 via-emerald-400/10 to-gold/20 blur-2xl" />
             <div className="animate-float relative">
-              <Mascot className="h-80 w-80 drop-shadow-2xl" />
+              <MascotDisplay
+                mascotUrl={settings.mascotUrl}
+                className="h-80 w-80 drop-shadow-2xl"
+              />
             </div>
             <span className="absolute -bottom-2 rounded-full border border-white/10 bg-white/10 px-5 py-2.5 text-xs font-semibold text-emerald-50 backdrop-blur">
               Hai! Aku Gigi, maskot {settings.siteName} 🌿
@@ -397,7 +400,11 @@ export default async function HomePage() {
             <div className="pointer-events-none absolute -left-10 -top-10 h-48 w-48 rounded-full bg-white/10 blur-2xl" />
             <div className="pointer-events-none absolute -bottom-16 -right-10 h-64 w-64 rounded-full bg-gold/20 blur-3xl" />
             <div className="animate-float-slow absolute -top-4 right-8 hidden md:block">
-              <Mascot className="h-28 w-28 opacity-90" animated={false} />
+              <MascotDisplay
+                mascotUrl={settings.mascotUrl}
+                className="h-28 w-28 opacity-90"
+                animated={false}
+              />
             </div>
             <h2 className="relative mx-auto max-w-2xl font-[family-name:var(--font-display)] text-3xl font-semibold tracking-tight sm:text-4xl">
               Siap menyambut anggota keluarga baru?

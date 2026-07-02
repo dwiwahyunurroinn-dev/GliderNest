@@ -9,7 +9,11 @@ import { saveUpload } from "@/lib/upload";
 export async function updateSettings(formData: FormData): Promise<void> {
   await requireAdmin();
 
-  const qrisUpload = await saveUpload(formData.get("qrisImage") as File | null);
+  const [qrisUpload, logoUpload, mascotUpload] = await Promise.all([
+    saveUpload(formData.get("qrisImage") as File | null),
+    saveUpload(formData.get("logoImage") as File | null),
+    saveUpload(formData.get("mascotImage") as File | null),
+  ]);
 
   const data = {
     siteName: String(formData.get("siteName") ?? "").trim() || "GliderNest",
@@ -24,8 +28,14 @@ export async function updateSettings(formData: FormData): Promise<void> {
     bankAccounts: String(formData.get("bankAccounts") ?? "").trim(),
     danaNumber: String(formData.get("danaNumber") ?? "").trim(),
     danaName: String(formData.get("danaName") ?? "").trim(),
+    codArea: String(formData.get("codArea") ?? "").trim(),
+    rekberInfo: String(formData.get("rekberInfo") ?? "").trim(),
     foundedYear: Number(formData.get("foundedYear") ?? 2019) || 2019,
     ...(qrisUpload ? { qrisImageUrl: qrisUpload } : {}),
+    ...(logoUpload ? { logoUrl: logoUpload } : {}),
+    ...(mascotUpload ? { mascotUrl: mascotUpload } : {}),
+    ...(formData.get("resetLogo") === "on" ? { logoUrl: "" } : {}),
+    ...(formData.get("resetMascot") === "on" ? { mascotUrl: "" } : {}),
   };
 
   await prisma.setting.upsert({

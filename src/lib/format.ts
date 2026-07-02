@@ -57,4 +57,6 @@ export const paymentMethodLabel: Record<string, string> = {
   qris: "QRIS",
   transfer: "Transfer Bank / M-Banking",
   dana: "DANA / E-Wallet",
+  cod: "COD (Bayar di Tempat)",
+  rekber: "Rekber (Rekening Bersama)",
 };

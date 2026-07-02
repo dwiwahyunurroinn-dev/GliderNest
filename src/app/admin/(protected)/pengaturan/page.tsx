@@ -64,6 +64,67 @@ export default async function AdminSettingsPage({
         </section>
 
         <section className="space-y-4 rounded-3xl border border-line bg-surface p-6 shadow-sm sm:p-8">
+          <h2 className="font-semibold">Logo & Maskot</h2>
+          <div className="grid gap-6 sm:grid-cols-2">
+            <div>
+              <label htmlFor="logoImage" className={labelCls}>
+                Logo website{" "}
+                <span className="font-normal text-muted">
+                  (tampil di header & footer; disarankan persegi/bulat)
+                </span>
+              </label>
+              <input id="logoImage" name="logoImage" type="file" accept="image/*" className={inputCls} />
+              {settings.logoUrl ? (
+                <div className="mt-3 flex items-center gap-4">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={settings.logoUrl}
+                    alt="Logo"
+                    className="h-16 w-16 rounded-full border border-line object-cover"
+                  />
+                  <label className="flex items-center gap-2 text-xs font-medium text-red-600">
+                    <input type="checkbox" name="resetLogo" className="h-3.5 w-3.5 accent-red-600" />
+                    Hapus & kembalikan ke maskot bawaan
+                  </label>
+                </div>
+              ) : (
+                <p className="mt-1.5 text-xs text-muted">
+                  Belum ada logo — saat ini memakai maskot bawaan.
+                </p>
+              )}
+            </div>
+            <div>
+              <label htmlFor="mascotImage" className={labelCls}>
+                Gambar maskot{" "}
+                <span className="font-normal text-muted">
+                  (tampil besar di beranda, tentang kami, reseller; PNG transparan
+                  paling bagus)
+                </span>
+              </label>
+              <input id="mascotImage" name="mascotImage" type="file" accept="image/*" className={inputCls} />
+              {settings.mascotUrl ? (
+                <div className="mt-3 flex items-center gap-4">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={settings.mascotUrl}
+                    alt="Maskot"
+                    className="h-16 w-16 rounded-2xl border border-line object-contain"
+                  />
+                  <label className="flex items-center gap-2 text-xs font-medium text-red-600">
+                    <input type="checkbox" name="resetMascot" className="h-3.5 w-3.5 accent-red-600" />
+                    Hapus & kembalikan ke maskot bawaan
+                  </label>
+                </div>
+              ) : (
+                <p className="mt-1.5 text-xs text-muted">
+                  Belum ada gambar kustom — saat ini memakai maskot “Gigi” bawaan.
+                </p>
+              )}
+            </div>
+          </div>
+        </section>
+
+        <section className="space-y-4 rounded-3xl border border-line bg-surface p-6 shadow-sm sm:p-8">
           <h2 className="font-semibold">Kontak & Lokasi</h2>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
@@ -157,6 +218,35 @@ export default async function AdminSettingsPage({
               <label htmlFor="danaName" className={labelCls}>Nama akun DANA</label>
               <input id="danaName" name="danaName" defaultValue={settings.danaName} className={inputCls} />
             </div>
+          </div>
+          <div>
+            <label htmlFor="codArea" className={labelCls}>
+              Area layanan COD{" "}
+              <span className="font-normal text-muted">
+                (kosongkan jika tidak melayani COD)
+              </span>
+            </label>
+            <input
+              id="codArea"
+              name="codArea"
+              defaultValue={settings.codArea}
+              placeholder="Sleman, Kota Yogyakarta, dan Bantul"
+              className={inputCls}
+            />
+          </div>
+          <div>
+            <label htmlFor="rekberInfo" className={labelCls}>
+              Jasa rekber yang didukung{" "}
+              <span className="font-normal text-muted">(satu per baris)</span>
+            </label>
+            <textarea
+              id="rekberInfo"
+              name="rekberInfo"
+              rows={3}
+              defaultValue={settings.rekberInfo}
+              placeholder={"Rekber Tokopedia/Shopee (checkout via marketplace)\nRekberID\nAdmin grup komunitas sugar glider"}
+              className={inputCls}
+            />
           </div>
         </section>
 

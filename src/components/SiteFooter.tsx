@@ -3,10 +3,11 @@ import { Mail, MapPin, MessageCircle, Clock } from "lucide-react";
 import { InstagramIcon } from "./icons";
 import type { Settings } from "@/lib/settings";
 import { waLink } from "@/lib/settings";
-import { Mascot } from "./Mascot";
+import { BrandMark } from "./BrandMark";
 
 const exploreLinks = [
   { href: "/sugar-glider", label: "Katalog Sugar Glider" },
+  { href: "/tentang-kami", label: "Tentang Kami" },
   { href: "/blog", label: "Blog Edukasi" },
   { href: "/galeri", label: "Galeri" },
   { href: "/testimoni", label: "Testimoni" },
@@ -20,8 +21,8 @@ export function SiteFooter({ settings }: { settings: Settings }) {
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-4">
         <div className="md:col-span-2">
           <div className="flex items-center gap-2.5 text-white">
-            <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10">
-              <Mascot className="h-9 w-9" animated={false} />
+            <span className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full bg-white/10">
+              <BrandMark logoUrl={settings.logoUrl} className="h-9 w-9" />
             </span>
             <span className="font-[family-name:var(--font-display)] text-xl font-semibold">
               {settings.siteName}

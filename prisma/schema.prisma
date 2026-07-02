@@ -91,5 +91,9 @@ model Setting {
   bankAccounts String @default("") // per baris: BANK|NOMOR|ATAS NAMA
   danaNumber   String @default("")
   danaName     String @default("")
+  codArea      String @default("") // area yang dilayani COD, contoh: "Sleman & Kota Yogyakarta"
+  rekberInfo   String @default("") // jasa rekber yang didukung, satu per baris
+  logoUrl      String @default("") // logo di header/footer; kosong = pakai maskot bawaan
+  mascotUrl    String @default("") // gambar maskot kustom; kosong = pakai maskot SVG bawaan
   foundedYear  Int    @default(2019)
 }

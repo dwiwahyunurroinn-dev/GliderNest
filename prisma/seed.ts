@@ -176,6 +176,9 @@ async function main() {
       bankAccounts: "BCA|1234567890|GliderNest\nBRI|098765432100|GliderNest",
       danaNumber: "081234567890",
       danaName: "GliderNest",
+      codArea: "Sleman, Kota Yogyakarta, dan sekitarnya",
+      rekberInfo:
+        "Rekber Tokopedia/Shopee (checkout via marketplace)\nAdmin grup komunitas sugar glider Indonesia",
     },
   });
 

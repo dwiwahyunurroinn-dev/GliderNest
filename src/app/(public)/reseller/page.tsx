@@ -7,7 +7,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { getSettings } from "@/lib/settings";
-import { Mascot } from "@/components/Mascot";
+import { MascotDisplay } from "@/components/BrandMark";
 import { Reveal } from "@/components/Reveal";
 import { SectionHeading } from "@/components/SectionHeading";
 import { WhatsAppCta } from "@/components/WhatsAppCta";
@@ -79,7 +79,10 @@ export default async function ResellerPage() {
         <Reveal delay={150}>
           <div className="relative mx-auto flex max-w-sm items-center justify-center">
             <div className="absolute h-64 w-64 rounded-full bg-brand-soft blur-2xl" />
-            <Mascot className="animate-float relative h-64 w-64" />
+            <MascotDisplay
+              mascotUrl={settings.mascotUrl}
+              className="animate-float relative h-64 w-64"
+            />
           </div>
         </Reveal>
       </div>

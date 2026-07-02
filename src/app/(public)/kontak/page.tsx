@@ -38,7 +38,7 @@ const faqs = [
   {
     question: "Metode pembayaran apa saja yang diterima?",
     answer:
-      "QRIS (bisa dibayar dari aplikasi apa pun), transfer bank / m-banking, dan DANA. Instruksi lengkap muncul otomatis setelah Anda membuat pesanan di website.",
+      "QRIS (bisa dibayar dari aplikasi apa pun), transfer bank / m-banking, DANA, COD untuk area terdekat, dan rekber (rekening bersama) untuk transaksi jarak jauh yang paling aman. Instruksi lengkap muncul otomatis setelah Anda membuat pesanan di website.",
   },
   {
     question: "Apa saja yang saya dapat saat adopsi?",

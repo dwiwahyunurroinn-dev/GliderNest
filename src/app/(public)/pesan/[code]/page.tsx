@@ -6,6 +6,8 @@ import {
   QrCode,
   Landmark,
   Smartphone,
+  HandCoins,
+  ShieldCheck,
 } from "lucide-react";
 import { prisma } from "@/lib/db";
 import { getSettings, parseBankAccounts } from "@/lib/settings";
@@ -31,7 +33,16 @@ export default async function OrderDetailPage({
   if (!order) notFound();
 
   const banks = parseBankAccounts(settings.bankAccounts);
-  const confirmMessage = `Halo ${settings.siteName}, saya sudah/akan membayar pesanan ${order.code} (${order.gliderName}) sebesar ${formatPrice(order.amount)} via ${paymentMethodLabel[order.paymentMethod]}. Berikut bukti pembayarannya.`;
+  const rekberServices = settings.rekberInfo
+    .split("\n")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  const confirmMessage =
+    order.paymentMethod === "cod"
+      ? `Halo ${settings.siteName}, saya memesan ${order.gliderName} dengan kode ${order.code} (COD). Kapan kita bisa atur jadwal dan titik temunya?`
+      : order.paymentMethod === "rekber"
+        ? `Halo ${settings.siteName}, saya memesan ${order.gliderName} dengan kode ${order.code} dan ingin bertransaksi via rekber. Jasa rekber apa yang bisa kita pakai?`
+        : `Halo ${settings.siteName}, saya sudah/akan membayar pesanan ${order.code} (${order.gliderName}) sebesar ${formatPrice(order.amount)} via ${paymentMethodLabel[order.paymentMethod]}. Berikut bukti pembayarannya.`;
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-14 sm:px-6">
@@ -163,6 +174,73 @@ export default async function OrderDetailPage({
           </div>
         )}
 
+        {order.paymentMethod === "cod" && (
+          <div>
+            <h2 className="flex items-center gap-2 font-semibold">
+              <HandCoins className="h-5 w-5 text-brand" /> COD — bayar saat
+              serah terima
+            </h2>
+            <p className="mt-4 text-sm leading-relaxed text-muted">
+              {settings.codArea ? (
+                <>
+                  COD kami layani untuk area{" "}
+                  <strong className="text-foreground">{settings.codArea}</strong>.{" "}
+                </>
+              ) : (
+                <>COD kami layani untuk lokasi yang terjangkau dari kandang. </>
+              )}
+              Klik tombol konfirmasi di bawah untuk mengatur{" "}
+              <strong className="text-foreground">jadwal dan titik temu</strong>{" "}
+              — Anda bisa bertemu langsung di kandang kami, melihat kondisi joey,
+              lalu membayar tunai/transfer di tempat sebesar{" "}
+              <strong className="text-foreground">
+                {formatPrice(order.amount)}
+              </strong>
+              .
+            </p>
+            <p className="mt-3 rounded-2xl bg-gold-soft px-4 py-3 text-xs leading-relaxed text-foreground/80">
+              Jika alamat Anda di luar area COD, kami akan tawarkan opsi
+              pengiriman kurir hewan atau metode pembayaran lain saat konfirmasi.
+            </p>
+          </div>
+        )}
+
+        {order.paymentMethod === "rekber" && (
+          <div>
+            <h2 className="flex items-center gap-2 font-semibold">
+              <ShieldCheck className="h-5 w-5 text-brand" /> Rekber — rekening
+              bersama
+            </h2>
+            <p className="mt-4 text-sm leading-relaxed text-muted">
+              Dengan rekber, uang Anda ditahan pihak ketiga dan baru diteruskan
+              ke kami <strong className="text-foreground">setelah joey tiba
+              dengan selamat</strong> — pilihan paling aman untuk transaksi
+              jarak jauh.
+            </p>
+            {rekberServices.length > 0 && (
+              <div className="mt-4 rounded-2xl bg-background px-5 py-4">
+                <p className="text-xs font-bold uppercase tracking-wide text-brand">
+                  Jasa rekber yang kami dukung
+                </p>
+                <ul className="mt-2 space-y-1 text-sm font-medium">
+                  {rekberServices.map((s) => (
+                    <li key={s}>• {s}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            <p className="mt-4 text-sm leading-relaxed text-muted">
+              Klik tombol konfirmasi di bawah — kami sepakati jasa rekber yang
+              dipakai, lalu Anda mengirim{" "}
+              <strong className="text-foreground">
+                {formatPrice(order.amount)}
+              </strong>{" "}
+              (plus biaya admin rekber sesuai ketentuan jasanya) ke rekening
+              bersama tersebut.
+            </p>
+          </div>
+        )}
+
         {order.paymentMethod === "dana" && (
           <div>
             <h2 className="flex items-center gap-2 font-semibold">
@@ -199,15 +277,29 @@ export default async function OrderDetailPage({
           Langkah terakhir: konfirmasi via WhatsApp
         </p>
         <p className="mx-auto mt-2 max-w-md text-sm text-emerald-100/70">
-          Kirim bukti pembayaran beserta kode pesanan{" "}
-          <strong className="text-gold">{order.code}</strong> agar kami segera
-          memproses pengiriman joey Anda.
+          {order.paymentMethod === "cod"
+            ? "Sebutkan kode pesanan "
+            : order.paymentMethod === "rekber"
+              ? "Sebutkan kode pesanan "
+              : "Kirim bukti pembayaran beserta kode pesanan "}
+          <strong className="text-gold">{order.code}</strong>
+          {order.paymentMethod === "cod"
+            ? " untuk mengatur jadwal dan titik temu COD."
+            : order.paymentMethod === "rekber"
+              ? " untuk menyepakati jasa rekber yang dipakai."
+              : " agar kami segera memproses pengiriman joey Anda."}
         </p>
         <div className="mt-5 flex justify-center">
           <WhatsAppCta
             whatsapp={settings.whatsapp}
             message={confirmMessage}
-            label="Konfirmasi Pembayaran"
+            label={
+              order.paymentMethod === "cod"
+                ? "Atur Jadwal COD"
+                : order.paymentMethod === "rekber"
+                  ? "Atur Transaksi Rekber"
+                  : "Konfirmasi Pembayaran"
+            }
           />
         </div>
       </div>

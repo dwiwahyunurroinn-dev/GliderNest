@@ -23,7 +23,7 @@ export async function createOrder(formData: FormData): Promise<void> {
   if (!customerName || !phone || !address) {
     redirect(`/pesan?glider=${gliderSlug}&error=lengkapi`);
   }
-  if (!["qris", "transfer", "dana"].includes(paymentMethod)) {
+  if (!["qris", "transfer", "dana", "cod", "rekber"].includes(paymentMethod)) {
     redirect(`/pesan?glider=${gliderSlug}&error=metode`);
   }
 

@@ -8,6 +8,8 @@ import {
   QrCode,
   Landmark,
   Smartphone,
+  HandCoins,
+  ShieldCheck,
   ArrowRight,
 } from "lucide-react";
 import { getSettings } from "@/lib/settings";
@@ -72,6 +74,19 @@ export default async function HowToOrderPage() {
       description:
         "Kirim langsung ke nomor e-wallet resmi atas nama penangkaran — bukan rekening pribadi tak terverifikasi.",
     },
+    {
+      icon: HandCoins,
+      title: "COD (Bayar di Tempat)",
+      description: settings.codArea
+        ? `Untuk area ${settings.codArea}: bertemu langsung, lihat kondisi joey, lalu bayar di tempat.`
+        : "Untuk lokasi terdekat dari kandang: bertemu langsung, lihat kondisi joey, lalu bayar di tempat.",
+    },
+    {
+      icon: ShieldCheck,
+      title: "Rekber (Rekening Bersama)",
+      description:
+        "Paling aman untuk transaksi jarak jauh — uang ditahan pihak ketiga dan baru diteruskan setelah joey tiba dengan selamat.",
+    },
   ];
 
   return (
@@ -117,7 +132,7 @@ export default async function HowToOrderPage() {
           <h2 className="font-[family-name:var(--font-display)] text-2xl font-semibold">
             Metode pembayaran yang tersedia
           </h2>
-          <div className="mt-6 grid gap-4 sm:grid-cols-3">
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {paymentMethods.map((m) => (
               <div
                 key={m.title}

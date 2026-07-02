@@ -10,7 +10,7 @@ export default async function PublicLayout({
   const settings = await getSettings();
   return (
     <>
-      <SiteHeader siteName={settings.siteName} />
+      <SiteHeader siteName={settings.siteName} logoUrl={settings.logoUrl} />
       <main className="flex-1">{children}</main>
       <SiteFooter settings={settings} />
     </>

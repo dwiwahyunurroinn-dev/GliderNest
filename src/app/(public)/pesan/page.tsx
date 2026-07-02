@@ -1,7 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AlertCircle, QrCode, Landmark, Smartphone, ShoppingBag } from "lucide-react";
+import {
+  AlertCircle,
+  QrCode,
+  Landmark,
+  Smartphone,
+  ShoppingBag,
+  HandCoins,
+  ShieldCheck,
+} from "lucide-react";
 import { prisma } from "@/lib/db";
+import { getSettings } from "@/lib/settings";
 import { formatPrice } from "@/lib/format";
 import { Reveal } from "@/components/Reveal";
 import { SectionHeading } from "@/components/SectionHeading";
@@ -22,22 +31,40 @@ const errorMessages: Record<string, string> = {
     "Maaf, glider tersebut sudah tidak tersedia. Silakan pilih glider lain.",
 };
 
-const paymentOptions = [
-  { value: "qris", icon: QrCode, label: "QRIS", hint: "Scan dari aplikasi apa pun" },
-  { value: "transfer", icon: Landmark, label: "Transfer Bank", hint: "ATM / m-banking" },
-  { value: "dana", icon: Smartphone, label: "DANA", hint: "Kirim ke nomor e-wallet" },
-];
-
 export default async function OrderPage({
   searchParams,
 }: {
   searchParams: Promise<{ glider?: string; error?: string }>;
 }) {
-  const { glider: selectedSlug, error } = await searchParams;
-  const available = await prisma.glider.findMany({
-    where: { status: "tersedia" },
-    orderBy: { price: "asc" },
-  });
+  const [{ glider: selectedSlug, error }, available, settings] =
+    await Promise.all([
+      searchParams,
+      prisma.glider.findMany({
+        where: { status: "tersedia" },
+        orderBy: { price: "asc" },
+      }),
+      getSettings(),
+    ]);
+
+  const paymentOptions = [
+    { value: "qris", icon: QrCode, label: "QRIS", hint: "Scan dari aplikasi apa pun" },
+    { value: "transfer", icon: Landmark, label: "Transfer Bank", hint: "ATM / m-banking" },
+    { value: "dana", icon: Smartphone, label: "DANA", hint: "Kirim ke nomor e-wallet" },
+    {
+      value: "cod",
+      icon: HandCoins,
+      label: "COD",
+      hint: settings.codArea
+        ? `Bayar di tempat — area ${settings.codArea}`
+        : "Bayar di tempat (area terdekat)",
+    },
+    {
+      value: "rekber",
+      icon: ShieldCheck,
+      label: "Rekber",
+      hint: "Rekening bersama — paling aman",
+    },
+  ];
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-14 sm:px-6">
