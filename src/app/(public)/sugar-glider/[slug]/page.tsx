@@ -43,8 +43,30 @@ export default async function GliderDetailPage({
     take: 3,
   });
 
+  // Data terstruktur produk agar tampil kaya di hasil pencarian Google.
+  const productJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: `Sugar Glider ${glider.morph} — ${glider.name}`,
+    description: glider.description,
+    ...(glider.imageUrl ? { image: glider.imageUrl } : {}),
+    offers: {
+      "@type": "Offer",
+      priceCurrency: "IDR",
+      price: glider.price,
+      availability:
+        glider.status === "tersedia" && glider.stock > 0
+          ? "https://schema.org/InStock"
+          : "https://schema.org/OutOfStock",
+    },
+  };
+
   return (
     <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+      />
       <Link
         href="/sugar-glider"
         className="inline-flex items-center gap-1.5 text-sm font-medium text-muted transition-colors hover:text-brand-strong"

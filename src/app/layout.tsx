@@ -18,6 +18,7 @@ export const dynamic = "force-dynamic";
 export async function generateMetadata(): Promise<Metadata> {
   const s = await getSettings();
   return {
+    metadataBase: new URL(process.env.SITE_URL ?? "https://glidernest.id"),
     title: {
       default: `${s.siteName} — ${s.tagline}`,
       template: `%s — ${s.siteName}`,
