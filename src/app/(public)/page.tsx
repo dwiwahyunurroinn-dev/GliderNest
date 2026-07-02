@@ -170,10 +170,11 @@ export default async function HomePage() {
             </Reveal>
           </div>
 
-          {/* kartu ringkas mengambang di atas pemandangan */}
-          <div className="hidden flex-col items-end gap-4 md:flex">
+          {/* kartu ringkas mengambang di atas pemandangan
+              (HP: baris geser horizontal · desktop: kolom melayang) */}
+          <div className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 md:mx-0 md:flex-col md:items-end md:gap-4 md:overflow-visible md:p-0">
             <Reveal delay={200}>
-              <div className="animate-float-slow w-72 rounded-3xl border border-line bg-surface/90 p-5 shadow-lg shadow-brand/10 backdrop-blur">
+              <div className="animate-float-slow w-72 shrink-0 snap-start rounded-3xl border border-line bg-surface/90 p-5 shadow-lg shadow-brand/10 backdrop-blur">
                 <p className="flex items-center gap-2 text-sm font-bold">
                   <ShieldCheck className="h-4.5 w-4.5 text-brand" />
                   Garansi kesehatan 7 hari
@@ -184,7 +185,7 @@ export default async function HomePage() {
               </div>
             </Reveal>
             <Reveal delay={350}>
-              <div className="animate-float w-72 rounded-3xl border border-line bg-surface/90 p-5 shadow-lg shadow-brand/10 backdrop-blur">
+              <div className="animate-float w-72 shrink-0 snap-start rounded-3xl border border-line bg-surface/90 p-5 shadow-lg shadow-brand/10 backdrop-blur">
                 <p className="flex items-center gap-2 text-sm font-bold">
                   <HeartHandshake className="h-4.5 w-4.5 text-brand" />
                   Pendampingan seumur hidup
@@ -195,7 +196,7 @@ export default async function HomePage() {
               </div>
             </Reveal>
             <Reveal delay={500}>
-              <div className="animate-float-slow w-72 rounded-3xl border border-line bg-surface/90 p-5 shadow-lg shadow-brand/10 backdrop-blur">
+              <div className="animate-float-slow w-72 shrink-0 snap-start rounded-3xl border border-line bg-surface/90 p-5 shadow-lg shadow-brand/10 backdrop-blur">
                 <p className="flex items-center gap-2 text-sm font-bold">
                   <Leaf className="h-4.5 w-4.5 text-brand" />
                   100% hasil penangkaran etis

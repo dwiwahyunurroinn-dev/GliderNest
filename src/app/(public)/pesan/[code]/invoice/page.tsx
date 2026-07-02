@@ -120,7 +120,8 @@ export default async function InvoicePage({
           </div>
         </div>
 
-        <table className="mt-8 w-full text-sm">
+        <div className="mt-8 overflow-x-auto">
+        <table className="w-full min-w-[480px] text-sm">
           <thead>
             <tr className="border-y border-slate-200 text-left text-xs uppercase tracking-wider text-slate-400">
               <th className="py-3">Deskripsi</th>
@@ -155,6 +156,7 @@ export default async function InvoicePage({
             </tr>
           </tfoot>
         </table>
+        </div>
 
         {order.note && (
           <p className="mt-2 rounded-xl bg-slate-50 px-4 py-3 text-xs text-slate-600">

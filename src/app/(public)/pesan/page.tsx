@@ -168,7 +168,7 @@ export default async function OrderPage({
 
             <div>
               <span className="text-sm font-semibold">Metode pembayaran</span>
-              <div className="mt-3 grid gap-3 sm:grid-cols-3">
+              <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
                 {paymentOptions.map((opt, i) => (
                   <label
                     key={opt.value}
