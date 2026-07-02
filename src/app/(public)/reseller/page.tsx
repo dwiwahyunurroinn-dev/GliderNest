@@ -6,8 +6,7 @@ import {
   Truck,
   CheckCircle2,
 } from "lucide-react";
-import { getSettings } from "@/lib/settings";
-import { NatureScene } from "@/components/NatureScene";
+import { getActiveBackgroundUrl, getSettings } from "@/lib/settings";
 import { Reveal } from "@/components/Reveal";
 import { SectionHeading } from "@/components/SectionHeading";
 import { WhatsAppCta } from "@/components/WhatsAppCta";
@@ -55,7 +54,10 @@ const requirements = [
 ];
 
 export default async function ResellerPage() {
-  const settings = await getSettings();
+  const [settings, backgroundUrl] = await Promise.all([
+    getSettings(),
+    getActiveBackgroundUrl(),
+  ]);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
@@ -78,7 +80,12 @@ export default async function ResellerPage() {
         </Reveal>
         <Reveal delay={150}>
           <div className="relative h-64 overflow-hidden rounded-[2rem] border border-line shadow-lg shadow-brand/10 lg:h-72">
-            <NatureScene className="absolute inset-0 h-full w-full" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={backgroundUrl}
+              alt="Hutan — habitat asli sugar glider"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
             <span className="absolute bottom-4 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-surface/90 px-5 py-2 text-xs font-semibold text-brand-strong shadow-sm backdrop-blur">
               Mitra resmi — stok joey prioritas untuk Anda
             </span>

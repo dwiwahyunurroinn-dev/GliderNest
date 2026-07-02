@@ -10,6 +10,19 @@ export async function getSettings(): Promise<Settings> {
   return prisma.setting.create({ data: { id: 1 } });
 }
 
+const DEFAULT_BACKGROUND = "/backgrounds/forest-mist.jpg";
+
+/** URL background aktif (dikelola dari Admin → Background). */
+export async function getActiveBackgroundUrl(): Promise<string> {
+  const active = await prisma.background.findFirst({
+    where: { active: true },
+    orderBy: { createdAt: "desc" },
+  });
+  if (active) return active.imageUrl;
+  const any = await prisma.background.findFirst({ orderBy: { createdAt: "desc" } });
+  return any?.imageUrl ?? DEFAULT_BACKGROUND;
+}
+
 export function waLink(whatsapp: string, message: string): string {
   return `https://wa.me/${whatsapp}?text=${encodeURIComponent(message)}`;
 }

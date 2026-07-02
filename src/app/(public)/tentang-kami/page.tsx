@@ -9,8 +9,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { prisma } from "@/lib/db";
-import { getSettings } from "@/lib/settings";
-import { NatureScene } from "@/components/NatureScene";
+import { getActiveBackgroundUrl, getSettings } from "@/lib/settings";
 import { Reveal } from "@/components/Reveal";
 import { SectionHeading } from "@/components/SectionHeading";
 import { WhatsAppCta } from "@/components/WhatsAppCta";
@@ -47,11 +46,13 @@ const commitments = [
 ];
 
 export default async function AboutPage() {
-  const [settings, gliderCount, testimonialCount] = await Promise.all([
-    getSettings(),
-    prisma.glider.count(),
-    prisma.testimonial.count({ where: { published: true } }),
-  ]);
+  const [settings, backgroundUrl, gliderCount, testimonialCount] =
+    await Promise.all([
+      getSettings(),
+      getActiveBackgroundUrl(),
+      prisma.glider.count(),
+      prisma.testimonial.count({ where: { published: true } }),
+    ]);
   const years = Math.max(1, new Date().getFullYear() - settings.foundedYear);
 
   return (
@@ -80,7 +81,12 @@ export default async function AboutPage() {
         </Reveal>
         <Reveal delay={150}>
           <div className="relative h-72 overflow-hidden rounded-[2rem] border border-line shadow-lg shadow-brand/10 lg:h-80">
-            <NatureScene className="absolute inset-0 h-full w-full" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={backgroundUrl}
+              alt="Hutan — habitat asli sugar glider"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
             <span className="absolute bottom-4 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-surface/90 px-5 py-2 text-xs font-semibold text-brand-strong shadow-sm backdrop-blur">
               Habitat asli sugar glider: hutan yang tenang 🌿
             </span>

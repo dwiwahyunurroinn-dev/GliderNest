@@ -13,10 +13,9 @@ import {
   PackageCheck,
 } from "lucide-react";
 import { prisma } from "@/lib/db";
-import { getSettings, waLink } from "@/lib/settings";
+import { getActiveBackgroundUrl, getSettings, waLink } from "@/lib/settings";
 import { formatDate } from "@/lib/format";
 import { GliderCard } from "@/components/GliderCard";
-import { NatureScene } from "@/components/NatureScene";
 import { Reveal } from "@/components/Reveal";
 import { SectionHeading } from "@/components/SectionHeading";
 import { TiltCard } from "@/components/TiltCard";
@@ -74,9 +73,10 @@ const orderSteps = [
 ];
 
 export default async function HomePage() {
-  const [settings, featured, articles, testimonials, gallery] =
+  const [settings, backgroundUrl, featured, articles, testimonials, gallery] =
     await Promise.all([
       getSettings(),
+      getActiveBackgroundUrl(),
       prisma.glider.findMany({
         where: { status: "tersedia" },
         orderBy: [{ featured: "desc" }, { createdAt: "desc" }],
@@ -97,12 +97,16 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* ===== Hero dengan background alam ===== */}
+      {/* ===== Hero dengan foto alam (dikelola dari Admin → Background) ===== */}
       <section className="relative overflow-hidden">
-        {/* pemandangan alam biru soft memenuhi hero */}
-        <NatureScene className="pointer-events-none absolute inset-0 h-full w-full" />
-        {/* lapisan pemutih di sisi teks agar tulisan tetap jelas terbaca */}
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-white/85 via-white/55 to-transparent" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={backgroundUrl}
+          alt="Pemandangan alam habitat sugar glider"
+          className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+        />
+        {/* lapisan pemutih agar teks tetap jelas terbaca di atas foto */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-white/95 via-white/75 to-white/15" />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-background to-transparent" />
 
         <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 py-20 sm:px-6 md:grid-cols-[1.1fr_0.9fr] md:py-28">

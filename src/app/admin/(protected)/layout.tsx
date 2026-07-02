@@ -6,6 +6,7 @@ import {
   Images,
   Quote,
   PackageSearch,
+  Wallpaper,
   Settings,
   LogOut,
   ExternalLink,
@@ -22,6 +23,7 @@ const menu = [
   { href: "/admin/artikel", icon: BookOpenText, label: "Artikel Blog" },
   { href: "/admin/galeri", icon: Images, label: "Galeri" },
   { href: "/admin/testimoni", icon: Quote, label: "Testimoni" },
+  { href: "/admin/background", icon: Wallpaper, label: "Background" },
   { href: "/admin/pengaturan", icon: Settings, label: "Pengaturan" },
 ];
 

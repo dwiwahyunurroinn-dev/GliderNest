@@ -76,6 +76,16 @@ model Order {
   updatedAt     DateTime @updatedAt
 }
 
+// Koleksi gambar background website — dikelola dari panel admin;
+// yang berstatus aktif dipakai sebagai latar hero & kartu ilustrasi.
+model Background {
+  id        String   @id @default(cuid())
+  title     String
+  imageUrl  String
+  active    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
 model Setting {
   id           Int    @id @default(1)
   siteName     String @default("GliderNest")

@@ -158,6 +158,12 @@ const testimonials = [
   },
 ];
 
+const backgrounds = [
+  { title: "Hutan cahaya pagi", imageUrl: "/backgrounds/forest-mist.jpg", active: true },
+  { title: "Pepohonan hijau", imageUrl: "/backgrounds/forest-light.jpg", active: false },
+  { title: "Perbukitan berkabut", imageUrl: "/backgrounds/forest-hills.jpg", active: false },
+];
+
 const gallery = [
   { title: "Joey White Face Blond usia 2 bulan", imageUrl: "/gallery/gallery-1.svg" },
   { title: "Suasana kandang koloni indukan", imageUrl: "/gallery/gallery-2.svg" },
@@ -193,6 +199,9 @@ async function main() {
   }
   if ((await prisma.galleryItem.count()) === 0) {
     await prisma.galleryItem.createMany({ data: gallery });
+  }
+  if ((await prisma.background.count()) === 0) {
+    await prisma.background.createMany({ data: backgrounds });
   }
   console.log("Seed selesai: data contoh sudah masuk ke database.");
 }
