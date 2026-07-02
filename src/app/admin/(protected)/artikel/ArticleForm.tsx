@@ -1,5 +1,6 @@
 import type { Article } from "@/generated/prisma/client";
 import { inputCls, labelCls, btnPrimary } from "@/components/admin/ui";
+import { ImageInput } from "@/components/admin/ImageInput";
 
 export function ArticleForm({
   article,
@@ -56,14 +57,17 @@ export function ArticleForm({
             {article?.coverUrl ? "(kosongkan jika tidak ingin mengganti)" : "(opsional)"}
           </span>
         </label>
-        <input id="cover" name="cover" type="file" accept="image/*" className={inputCls} />
+        <ImageInput id="cover" name="cover" />
         {article?.coverUrl && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={article.coverUrl}
-            alt={article.title}
-            className="mt-3 h-28 w-44 rounded-2xl border border-line object-cover"
-          />
+          <div className="mt-3 flex items-center gap-3">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={article.coverUrl}
+              alt={article.title}
+              className="h-20 w-32 rounded-2xl border border-line object-cover"
+            />
+            <span className="text-xs text-muted">Sampul saat ini</span>
+          </div>
         )}
       </div>
 

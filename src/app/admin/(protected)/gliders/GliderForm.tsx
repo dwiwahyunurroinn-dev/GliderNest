@@ -1,5 +1,6 @@
 import type { Glider } from "@/generated/prisma/client";
 import { inputCls, labelCls, btnPrimary } from "@/components/admin/ui";
+import { ImageInput } from "@/components/admin/ImageInput";
 
 export function GliderForm({
   glider,
@@ -138,14 +139,17 @@ export function GliderForm({
             {glider?.imageUrl ? "(kosongkan jika tidak ingin mengganti)" : "(opsional)"}
           </span>
         </label>
-        <input id="image" name="image" type="file" accept="image/*" className={inputCls} />
+        <ImageInput id="image" name="image" />
         {glider?.imageUrl && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={glider.imageUrl}
-            alt={glider.name}
-            className="mt-3 h-28 w-28 rounded-2xl border border-line object-cover"
-          />
+          <div className="mt-3 flex items-center gap-3">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={glider.imageUrl}
+              alt={glider.name}
+              className="h-20 w-20 rounded-2xl border border-line object-cover"
+            />
+            <span className="text-xs text-muted">Foto saat ini</span>
+          </div>
         )}
       </div>
 

@@ -1,6 +1,7 @@
 import { ImagePlus, CheckCircle2, Circle } from "lucide-react";
 import { prisma } from "@/lib/db";
 import { DeleteButton } from "@/components/admin/DeleteButton";
+import { ImageInput } from "@/components/admin/ImageInput";
 import { inputCls, labelCls, btnPrimary } from "@/components/admin/ui";
 import {
   createBackground,
@@ -31,21 +32,19 @@ export default async function AdminBackgroundPage() {
         action={createBackground}
         className="mt-6 space-y-4 rounded-3xl border border-line bg-surface p-6 shadow-sm"
       >
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div>
-            <label htmlFor="title" className={labelCls}>Nama background</label>
-            <input
-              id="title"
-              name="title"
-              required
-              placeholder="Hutan pagi berkabut"
-              className={inputCls}
-            />
-          </div>
-          <div>
-            <label htmlFor="image" className={labelCls}>File foto</label>
-            <input id="image" name="image" type="file" accept="image/*" required className={inputCls} />
-          </div>
+        <div>
+          <label htmlFor="title" className={labelCls}>Nama background</label>
+          <input
+            id="title"
+            name="title"
+            required
+            placeholder="Hutan pagi berkabut"
+            className={inputCls}
+          />
+        </div>
+        <div>
+          <label htmlFor="image" className={labelCls}>File foto</label>
+          <ImageInput id="image" name="image" required previewHeight="h-56" />
         </div>
         <label className="flex items-center gap-2.5 text-sm font-medium">
           <input type="checkbox" name="active" defaultChecked className="h-4 w-4 accent-[var(--brand)]" />

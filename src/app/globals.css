@@ -45,20 +45,20 @@ html[data-theme="dark"] {
   --navy: #0a0f17;
 }
 
-/* ---------- Skin panel admin bergaya Materio (aksen ungu) ---------- */
+/* ---------- Skin panel admin bergaya Materio (aksen biru) ---------- */
 .admin-shell {
-  --brand: #8c57ff;
-  --brand-strong: #7444e4;
-  --brand-soft: #ede4ff;
-  --background: #f4f5fa;
+  --brand: #2f6fed;
+  --brand-strong: #1d5cd8;
+  --brand-soft: #e3edff;
+  --background: #f3f6fb;
 }
 html[data-theme="dark"] .admin-shell {
-  --brand: #9d75ff;
-  --brand-strong: #b899ff;
-  --brand-soft: #2b2350;
-  --background: #12101c;
-  --surface: #1a1726;
-  --line: #2e2a42;
+  --brand: #5b93ff;
+  --brand-strong: #8ab2ff;
+  --brand-soft: #1c2c4d;
+  --background: #0e1420;
+  --surface: #161e2e;
+  --line: #27334b;
 }
 
 body {

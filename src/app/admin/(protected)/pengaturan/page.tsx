@@ -1,6 +1,7 @@
 import { CheckCircle2, Save } from "lucide-react";
 import { getSettings } from "@/lib/settings";
 import { inputCls, labelCls, btnPrimary } from "@/components/admin/ui";
+import { ImageInput } from "@/components/admin/ImageInput";
 import { updateSettings } from "./actions";
 
 export const dynamic = "force-dynamic";
@@ -73,7 +74,7 @@ export default async function AdminSettingsPage({
                   (tampil di header & footer; disarankan persegi/bulat)
                 </span>
               </label>
-              <input id="logoImage" name="logoImage" type="file" accept="image/*" className={inputCls} />
+              <ImageInput id="logoImage" name="logoImage" previewHeight="h-32" />
               {settings.logoUrl ? (
                 <div className="mt-3 flex items-center gap-4">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -101,7 +102,7 @@ export default async function AdminSettingsPage({
                   gambar disimpan untuk kebutuhan mendatang)
                 </span>
               </label>
-              <input id="mascotImage" name="mascotImage" type="file" accept="image/*" className={inputCls} />
+              <ImageInput id="mascotImage" name="mascotImage" previewHeight="h-32" />
               {settings.mascotUrl ? (
                 <div className="mt-3 flex items-center gap-4">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -183,7 +184,7 @@ export default async function AdminSettingsPage({
                   : "(unggah gambar kode QR dari penyedia QRIS Anda)"}
               </span>
             </label>
-            <input id="qrisImage" name="qrisImage" type="file" accept="image/*" className={inputCls} />
+            <ImageInput id="qrisImage" name="qrisImage" previewHeight="h-56" />
             {settings.qrisImageUrl && (
               // eslint-disable-next-line @next/next/no-img-element
               <img

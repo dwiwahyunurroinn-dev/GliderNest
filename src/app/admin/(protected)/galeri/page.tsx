@@ -1,6 +1,7 @@
 import { ImagePlus } from "lucide-react";
 import { prisma } from "@/lib/db";
 import { DeleteButton } from "@/components/admin/DeleteButton";
+import { ImageInput } from "@/components/admin/ImageInput";
 import { inputCls, labelCls, btnPrimary } from "@/components/admin/ui";
 import { createGalleryItem, deleteGalleryItem } from "./actions";
 
@@ -23,7 +24,7 @@ export default async function AdminGalleryPage() {
 
       <form
         action={createGalleryItem}
-        className="mt-6 grid gap-4 rounded-3xl border border-line bg-surface p-6 shadow-sm sm:grid-cols-[1fr_1fr_auto] sm:items-end"
+        className="mt-6 space-y-4 rounded-3xl border border-line bg-surface p-6 shadow-sm"
       >
         <div>
           <label htmlFor="title" className={labelCls}>Judul foto</label>
@@ -37,11 +38,11 @@ export default async function AdminGalleryPage() {
         </div>
         <div>
           <label htmlFor="image" className={labelCls}>File foto</label>
-          <input id="image" name="image" type="file" accept="image/*" required className={inputCls} />
+          <ImageInput id="image" name="image" required />
         </div>
         <button type="submit" className={`${btnPrimary} justify-center`}>
           <ImagePlus className="h-4 w-4" />
-          Unggah
+          Unggah ke Galeri
         </button>
       </form>
 
