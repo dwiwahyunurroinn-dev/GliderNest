@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# GliderNest 🌙
 
-## Getting Started
+Website e-commerce & branding untuk peternakan sugar glider. Dibangun dengan
+**Next.js 16 (App Router) + TypeScript + Tailwind CSS v4**, berbahasa
+Indonesia, dengan alur pemesanan via WhatsApp dan skema database yang sudah
+disiapkan untuk PostgreSQL.
 
-First, run the development server:
+## Halaman
+
+| Rute | Isi |
+| --- | --- |
+| `/` | Hero, poin kredibilitas, joey unggulan, proses adopsi, testimoni |
+| `/gliders` | Katalog dengan filter status (tersedia / dipesan / terjual) |
+| `/gliders/[slug]` | Detail glider: morph, umur, silsilah, harga, CTA WhatsApp |
+| `/tentang` | Profil & standar penangkaran (halaman kredibilitas utama) |
+| `/panduan` | Panduan perawatan — konten edukasi sekaligus SEO |
+| `/kontak` | Kontak + FAQ |
+
+SEO bawaan: metadata per halaman, Open Graph, `sitemap.xml`, `robots.txt`.
+
+## Menjalankan di Arch Linux
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Node.js LTS (disarankan) — atau pakai nvm/fnm dari AUR untuk multi-versi
+sudo pacman -S nodejs-lts-jod npm
+
+git clone https://github.com/dwiwahyunurroinn-dev/GliderNest.git
+cd GliderNest
+npm install
+npm run dev        # buka http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Perintah lain: `npm run build` (produksi), `npm run lint`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Konfigurasi bisnis
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Semua identitas bisnis ada di satu file: [`src/lib/site.ts`](src/lib/site.ts)
+— ganti nomor WhatsApp, email, Instagram, alamat, dan tahun berdiri di sana.
+Data glider ada di [`src/data/gliders.ts`](src/data/gliders.ts), testimoni dan
+FAQ di [`src/data/content.ts`](src/data/content.ts).
 
-## Learn More
+Foto asli glider tinggal menggantikan komponen `GliderMark` (placeholder SVG)
+dengan `next/image` ketika foto sudah siap.
 
-To learn more about Next.js, take a look at the following resources:
+## Arsitektur data: sekarang vs jangka panjang
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Fase 1 (sekarang):** konten disimpan sebagai file TypeScript statis.
+Situs 100% statis (SSG) — cepat, gratis di-hosting, tanpa server database.
+Untuk katalog berukuran puluhan ekor, ini pilihan paling tepat.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**Fase 2 (saat katalog membesar / butuh admin panel):** migrasi ke
+**PostgreSQL + Prisma**. Skemanya sudah disiapkan di
+[`prisma/schema.prisma`](prisma/schema.prisma) dan strukturnya identik dengan
+tipe di `src/lib/types.ts`, jadi migrasinya hanya mengganti implementasi
+fungsi di `src/data/gliders.ts` dengan query Prisma — halaman tidak berubah.
 
-## Deploy on Vercel
+Rekomendasi penyedia PostgreSQL managed (keduanya modern, punya free tier,
+dan sehat untuk jangka panjang):
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Neon** — serverless Postgres, branching database, pas dengan Vercel.
+- **Supabase** — Postgres + auth + storage foto + dashboard admin bawaan;
+  cocok jika nanti ingin panel admin tanpa banyak koding.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Langkah aktivasi tertulis di komentar atas `prisma/schema.prisma`.
+
+**Fase 3 (opsional):** pembayaran online via **Midtrans/Xendit**, panel admin
+(mis. Supabase Studio atau route `/admin` dengan auth), dan upload foto ke
+storage (Supabase Storage / Cloudflare R2).
+
+## Deployment
+
+Paling sederhana: **Vercel** (pembuat Next.js) — hubungkan repo GitHub ini,
+otomatis deploy tiap push. Alternatif: Cloudflare Pages atau Netlify.

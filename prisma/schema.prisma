@@ -1,0 +1,81 @@
+// Skema database untuk fase berikutnya (belum dipakai oleh aplikasi).
+//
+// Rekomendasi jangka panjang: PostgreSQL (managed: Neon atau Supabase,
+// keduanya punya free tier dan berjalan mulus dengan Vercel).
+// Struktur model Glider sengaja dibuat sama dengan tipe di src/lib/types.ts,
+// sehingga migrasi dari data statis hanya mengganti isi src/data/gliders.ts
+// dengan query Prisma — halaman tidak perlu berubah.
+//
+// Langkah aktivasi nanti:
+//   1. npm install prisma @prisma/client
+//   2. Isi DATABASE_URL di .env (connection string Neon/Supabase)
+//   3. npx prisma migrate dev --name init
+//   4. Ganti implementasi fungsi di src/data/gliders.ts dengan prisma.glider.*
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum GliderStatus {
+  TERSEDIA
+  DIPESAN
+  TERJUAL
+}
+
+enum GliderSex {
+  JANTAN
+  BETINA
+}
+
+model Glider {
+  id          String       @id @default(cuid())
+  slug        String       @unique
+  name        String
+  morph       String
+  sex         GliderSex
+  ageMonths   Int
+  price       Int
+  status      GliderStatus @default(TERSEDIA)
+  description String
+  lineage     String
+  traits      String[]
+  photos      Photo[]
+  inquiries   Inquiry[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Photo {
+  id       String @id @default(cuid())
+  url      String
+  alt      String
+  order    Int    @default(0)
+  glider   Glider @relation(fields: [gliderId], references: [id], onDelete: Cascade)
+  gliderId String
+}
+
+// Jejak calon pembeli yang klik tombol WhatsApp / mengisi form —
+// berguna untuk follow-up dan mengukur konversi.
+model Inquiry {
+  id        String   @id @default(cuid())
+  name      String
+  contact   String
+  message   String
+  glider    Glider?  @relation(fields: [gliderId], references: [id])
+  gliderId  String?
+  createdAt DateTime @default(now())
+}
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  name      String
+  city      String
+  quote     String
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
