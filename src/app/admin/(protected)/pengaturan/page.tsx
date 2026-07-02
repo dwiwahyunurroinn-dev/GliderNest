@@ -1,0 +1,170 @@
+import { CheckCircle2, Save } from "lucide-react";
+import { getSettings } from "@/lib/settings";
+import { inputCls, labelCls, btnPrimary } from "@/components/admin/ui";
+import { updateSettings } from "./actions";
+
+export const dynamic = "force-dynamic";
+
+export default async function AdminSettingsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ saved?: string }>;
+}) {
+  const [settings, { saved }] = await Promise.all([getSettings(), searchParams]);
+
+  return (
+    <div>
+      <h1 className="font-[family-name:var(--font-display)] text-2xl font-semibold">
+        Pengaturan Website
+      </h1>
+      <p className="mt-1 text-sm text-muted">
+        Identitas bisnis, kontak, lokasi maps, dan informasi pembayaran.
+      </p>
+
+      {saved && (
+        <p className="mt-4 flex items-center gap-2 rounded-2xl bg-brand-soft px-4 py-3 text-sm font-semibold text-brand-strong">
+          <CheckCircle2 className="h-4 w-4" />
+          Pengaturan berhasil disimpan.
+        </p>
+      )}
+
+      <form action={updateSettings} className="mt-6 space-y-8">
+        <section className="space-y-4 rounded-3xl border border-line bg-surface p-6 shadow-sm sm:p-8">
+          <h2 className="font-semibold">Identitas</h2>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label htmlFor="siteName" className={labelCls}>Nama website</label>
+              <input id="siteName" name="siteName" defaultValue={settings.siteName} className={inputCls} />
+            </div>
+            <div>
+              <label htmlFor="tagline" className={labelCls}>Tagline</label>
+              <input id="tagline" name="tagline" defaultValue={settings.tagline} className={inputCls} />
+            </div>
+            <div>
+              <label htmlFor="foundedYear" className={labelCls}>Tahun berdiri</label>
+              <input
+                id="foundedYear"
+                name="foundedYear"
+                type="number"
+                defaultValue={settings.foundedYear}
+                className={inputCls}
+              />
+            </div>
+          </div>
+          <div>
+            <label htmlFor="description" className={labelCls}>Deskripsi singkat</label>
+            <textarea
+              id="description"
+              name="description"
+              rows={3}
+              defaultValue={settings.description}
+              className={inputCls}
+            />
+          </div>
+        </section>
+
+        <section className="space-y-4 rounded-3xl border border-line bg-surface p-6 shadow-sm sm:p-8">
+          <h2 className="font-semibold">Kontak & Lokasi</h2>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label htmlFor="whatsapp" className={labelCls}>
+                Nomor WhatsApp{" "}
+                <span className="font-normal text-muted">(format 628xxx)</span>
+              </label>
+              <input id="whatsapp" name="whatsapp" defaultValue={settings.whatsapp} className={inputCls} />
+            </div>
+            <div>
+              <label htmlFor="email" className={labelCls}>Email</label>
+              <input id="email" name="email" type="email" defaultValue={settings.email} className={inputCls} />
+            </div>
+            <div>
+              <label htmlFor="instagram" className={labelCls}>
+                Instagram <span className="font-normal text-muted">(tanpa @)</span>
+              </label>
+              <input id="instagram" name="instagram" defaultValue={settings.instagram} className={inputCls} />
+            </div>
+            <div>
+              <label htmlFor="openHours" className={labelCls}>Jam operasional</label>
+              <input id="openHours" name="openHours" defaultValue={settings.openHours} className={inputCls} />
+            </div>
+          </div>
+          <div>
+            <label htmlFor="address" className={labelCls}>Alamat</label>
+            <input id="address" name="address" defaultValue={settings.address} className={inputCls} />
+          </div>
+          <div>
+            <label htmlFor="mapsEmbedUrl" className={labelCls}>
+              Link embed Google Maps
+            </label>
+            <input
+              id="mapsEmbedUrl"
+              name="mapsEmbedUrl"
+              defaultValue={settings.mapsEmbedUrl}
+              placeholder="https://www.google.com/maps/embed?pb=..."
+              className={inputCls}
+            />
+            <p className="mt-1.5 text-xs text-muted">
+              Cara mendapatkan: buka Google Maps → cari lokasi Anda → Bagikan →
+              “Sematkan peta” → salin nilai yang ada di dalam src=&quot;...&quot;.
+              Peta akan tampil otomatis di halaman Kontak.
+            </p>
+          </div>
+        </section>
+
+        <section className="space-y-4 rounded-3xl border border-line bg-surface p-6 shadow-sm sm:p-8">
+          <h2 className="font-semibold">Pembayaran</h2>
+          <div>
+            <label htmlFor="qrisImage" className={labelCls}>
+              Gambar QRIS{" "}
+              <span className="font-normal text-muted">
+                {settings.qrisImageUrl
+                  ? "(kosongkan jika tidak ingin mengganti)"
+                  : "(unggah gambar kode QR dari penyedia QRIS Anda)"}
+              </span>
+            </label>
+            <input id="qrisImage" name="qrisImage" type="file" accept="image/*" className={inputCls} />
+            {settings.qrisImageUrl && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={settings.qrisImageUrl}
+                alt="QRIS"
+                className="mt-3 h-40 w-40 rounded-2xl border border-line object-contain"
+              />
+            )}
+          </div>
+          <div>
+            <label htmlFor="bankAccounts" className={labelCls}>
+              Rekening bank{" "}
+              <span className="font-normal text-muted">
+                (satu per baris, format: BANK|NOMOR|ATAS NAMA)
+              </span>
+            </label>
+            <textarea
+              id="bankAccounts"
+              name="bankAccounts"
+              rows={3}
+              defaultValue={settings.bankAccounts}
+              placeholder={"BCA|1234567890|GliderNest\nBRI|0987654321|GliderNest"}
+              className={`${inputCls} font-mono`}
+            />
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label htmlFor="danaNumber" className={labelCls}>Nomor DANA</label>
+              <input id="danaNumber" name="danaNumber" defaultValue={settings.danaNumber} className={inputCls} />
+            </div>
+            <div>
+              <label htmlFor="danaName" className={labelCls}>Nama akun DANA</label>
+              <input id="danaName" name="danaName" defaultValue={settings.danaName} className={inputCls} />
+            </div>
+          </div>
+        </section>
+
+        <button type="submit" className={btnPrimary}>
+          <Save className="h-4 w-4" />
+          Simpan Semua Pengaturan
+        </button>
+      </form>
+    </div>
+  );
+}

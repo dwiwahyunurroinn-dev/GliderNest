@@ -1,73 +1,51 @@
-// Skema database untuk fase berikutnya (belum dipakai oleh aplikasi).
-//
-// Rekomendasi jangka panjang: PostgreSQL (managed: Neon atau Supabase,
-// keduanya punya free tier dan berjalan mulus dengan Vercel).
-// Struktur model Glider sengaja dibuat sama dengan tipe di src/lib/types.ts,
-// sehingga migrasi dari data statis hanya mengganti isi src/data/gliders.ts
-// dengan query Prisma — halaman tidak perlu berubah.
-//
-// Langkah aktivasi nanti:
-//   1. npm install prisma @prisma/client
-//   2. Isi DATABASE_URL di .env (connection string Neon/Supabase)
-//   3. npx prisma migrate dev --name init
-//   4. Ganti implementasi fungsi di src/data/gliders.ts dengan prisma.glider.*
+// Database lokal: SQLite (file prisma/dev.db) — tanpa instalasi server apa pun.
+// Untuk produksi nanti bisa dimigrasi ke PostgreSQL (Neon/Supabase) dengan
+// mengganti provider + adapter, tanpa mengubah halaman.
 
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-
-enum GliderStatus {
-  TERSEDIA
-  DIPESAN
-  TERJUAL
-}
-
-enum GliderSex {
-  JANTAN
-  BETINA
+  provider = "sqlite"
 }
 
 model Glider {
-  id          String       @id @default(cuid())
-  slug        String       @unique
+  id          String   @id @default(cuid())
+  slug        String   @unique
   name        String
   morph       String
-  sex         GliderSex
+  sex         String // "jantan" | "betina"
   ageMonths   Int
   price       Int
-  status      GliderStatus @default(TERSEDIA)
+  status      String   @default("tersedia") // tersedia | dipesan | terjual
   description String
   lineage     String
-  traits      String[]
-  photos      Photo[]
-  inquiries   Inquiry[]
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  traits      String // dipisah koma
+  imageUrl    String   @default("")
+  featured    Boolean  @default(false)
+  orders      Order[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
-model Photo {
-  id       String @id @default(cuid())
-  url      String
-  alt      String
-  order    Int    @default(0)
-  glider   Glider @relation(fields: [gliderId], references: [id], onDelete: Cascade)
-  gliderId String
-}
-
-// Jejak calon pembeli yang klik tombol WhatsApp / mengisi form —
-// berguna untuk follow-up dan mengukur konversi.
-model Inquiry {
+model Article {
   id        String   @id @default(cuid())
-  name      String
-  contact   String
-  message   String
-  glider    Glider?  @relation(fields: [gliderId], references: [id])
-  gliderId  String?
+  slug      String   @unique
+  title     String
+  excerpt   String
+  content   String // paragraf dipisah baris kosong
+  coverUrl  String   @default("")
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model GalleryItem {
+  id        String   @id @default(cuid())
+  title     String
+  imageUrl  String
   createdAt DateTime @default(now())
 }
 
@@ -76,6 +54,42 @@ model Testimonial {
   name      String
   city      String
   quote     String
-  published Boolean  @default(false)
+  rating    Int      @default(5)
+  published Boolean  @default(true)
   createdAt DateTime @default(now())
+}
+
+model Order {
+  id            String   @id @default(cuid())
+  code          String   @unique
+  customerName  String
+  phone         String
+  address       String
+  note          String   @default("")
+  paymentMethod String // qris | transfer | dana
+  status        String   @default("menunggu") // menunggu | diproses | dikirim | selesai | dibatalkan
+  amount        Int
+  glider        Glider?  @relation(fields: [gliderId], references: [id], onDelete: SetNull)
+  gliderId      String?
+  gliderName    String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Setting {
+  id           Int    @id @default(1)
+  siteName     String @default("GliderNest")
+  tagline      String @default("Peternakan Sugar Glider Terpercaya")
+  description  String @default("")
+  whatsapp     String @default("6281234567890")
+  email        String @default("halo@glidernest.id")
+  instagram    String @default("glidernest.id")
+  address      String @default("Sleman, Yogyakarta, Indonesia")
+  openHours    String @default("Setiap hari, 09.00–20.00 WIB")
+  mapsEmbedUrl String @default("")
+  qrisImageUrl String @default("")
+  bankAccounts String @default("") // per baris: BANK|NOMOR|ATAS NAMA
+  danaNumber   String @default("")
+  danaName     String @default("")
+  foundedYear  Int    @default(2019)
 }

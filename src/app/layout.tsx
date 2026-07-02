@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Fraunces } from "next/font/google";
 import "./globals.css";
-import { SiteHeader } from "@/components/SiteHeader";
-import { SiteFooter } from "@/components/SiteFooter";
-import { site } from "@/lib/site";
+import { getSettings } from "@/lib/settings";
 
 const jakarta = Plus_Jakarta_Sans({
   variable: "--font-jakarta",
@@ -15,22 +13,27 @@ const fraunces = Fraunces({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL(site.url),
-  title: {
-    default: `${site.name} — ${site.tagline}`,
-    template: `%s — ${site.name}`,
-  },
-  description: site.description,
-  openGraph: {
-    title: `${site.name} — ${site.tagline}`,
-    description: site.description,
-    url: site.url,
-    siteName: site.name,
-    locale: "id_ID",
-    type: "website",
-  },
-};
+export const dynamic = "force-dynamic";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const s = await getSettings();
+  return {
+    title: {
+      default: `${s.siteName} — ${s.tagline}`,
+      template: `%s — ${s.siteName}`,
+    },
+    description:
+      s.description ||
+      `${s.siteName} adalah peternakan sugar glider captive-bred yang mengutamakan kesehatan, silsilah jelas, dan edukasi perawatan.`,
+    openGraph: {
+      title: `${s.siteName} — ${s.tagline}`,
+      description: s.description,
+      siteName: s.siteName,
+      locale: "id_ID",
+      type: "website",
+    },
+  };
+}
 
 export default function RootLayout({
   children,
@@ -42,11 +45,7 @@ export default function RootLayout({
       lang="id"
       className={`${jakarta.variable} ${fraunces.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col">
-        <SiteHeader />
-        <main className="flex-1">{children}</main>
-        <SiteFooter />
-      </body>
+      <body className="flex min-h-full flex-col">{children}</body>
     </html>
   );
 }

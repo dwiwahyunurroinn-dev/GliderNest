@@ -1,73 +1,79 @@
-# GliderNest 🌙
+# GliderNest 🌿
 
-Website e-commerce & branding untuk peternakan sugar glider. Dibangun dengan
-**Next.js 16 (App Router) + TypeScript + Tailwind CSS v4**, berbahasa
-Indonesia, dengan alur pemesanan via WhatsApp dan skema database yang sudah
-disiapkan untuk PostgreSQL.
+Website e-commerce & branding untuk peternakan sugar glider — lengkap dengan
+**panel admin**, **database**, **sistem pemesanan**, maskot, dan tema hijau
+premium. Dibangun dengan Next.js 16 (App Router) + TypeScript + Tailwind CSS
+v4 + Prisma (SQLite).
 
-## Halaman
+## Cara menjalankan (Arch Linux)
+
+```bash
+git clone https://github.com/dwiwahyunurroinn-dev/GliderNest.git
+cd GliderNest
+git checkout claude/sugar-glider-ecommerce-site-sx1fck
+
+npm install     # install semua dependensi
+npm run setup   # buat database + isi data contoh (cukup sekali)
+npm run dev     # jalankan → buka http://localhost:3000
+```
+
+Jika sudah pernah clone, cukup: `git pull`, lalu `npm install && npm run setup`
+sekali, kemudian `npm run dev` seperti biasa.
+
+## Halaman publik
 
 | Rute | Isi |
 | --- | --- |
-| `/` | Hero, poin kredibilitas, joey unggulan, proses adopsi, testimoni |
-| `/gliders` | Katalog dengan filter status (tersedia / dipesan / terjual) |
-| `/gliders/[slug]` | Detail glider: morph, umur, silsilah, harga, CTA WhatsApp |
-| `/tentang` | Profil & standar penangkaran (halaman kredibilitas utama) |
-| `/panduan` | Panduan perawatan — konten edukasi sekaligus SEO |
-| `/kontak` | Kontak + FAQ |
+| `/` | Beranda: hero + maskot, keunggulan, joey unggulan, galeri berjalan, blog, testimoni |
+| `/sugar-glider` | Katalog dengan filter status + halaman detail per glider |
+| `/blog` | Blog edukasi (artikel dikelola dari admin) |
+| `/galeri` | Galeri foto (dikelola dari admin) |
+| `/testimoni` | Testimoni adopter (dikelola dari admin) |
+| `/reseller` | Program reseller: benefit & syarat kemitraan |
+| `/cara-memesan` | Panduan memesan + metode pembayaran |
+| `/pesan` | **Form pemesanan** → kode pesanan + instruksi pembayaran (QRIS / transfer / DANA) |
+| `/kontak` | Kontak, Google Maps, dan FAQ |
 
-SEO bawaan: metadata per halaman, Open Graph, `sitemap.xml`, `robots.txt`.
+## Panel admin — `/admin`
 
-## Menjalankan di Arch Linux
+Password bawaan: **`glidernest123`** (ganti lewat file `.env`, lihat
+`.env.example`).
 
-```bash
-# Node.js LTS (disarankan) — atau pakai nvm/fnm dari AUR untuk multi-versi
-sudo pacman -S nodejs-lts-jod npm
+- **Dashboard** — statistik & pesanan terbaru
+- **CRUD Sugar Glider** — tambah/edit/hapus, upload foto, tandai unggulan
+- **Pesanan** — ubah status (menunggu → diproses → dikirim → selesai / batal);
+  status glider ikut tersinkron otomatis
+- **CRUD Artikel** — tulis konten blog edukasi
+- **CRUD Galeri** — unggah/hapus foto
+- **CRUD Testimoni** — tambah, tampilkan/sembunyikan, hapus
+- **Pengaturan Website** — nama situs, WhatsApp, Instagram, alamat,
+  **link embed Google Maps**, gambar **QRIS**, rekening bank, nomor DANA
 
-git clone https://github.com/dwiwahyunurroinn-dev/GliderNest.git
-cd GliderNest
-npm install
-npm run dev        # buka http://localhost:3000
-```
+## Tentang pembayaran
 
-Perintah lain: `npm run build` (produksi), `npm run lint`.
+Pesanan tercatat di database dan pembeli langsung menerima instruksi
+pembayaran sesuai metode yang dipilih (QRIS / transfer bank / DANA) beserta
+kode pesanan, lalu konfirmasi bukti bayar via WhatsApp. Gambar QRIS dan nomor
+rekening diatur sendiri di **Admin → Pengaturan**.
 
-## Konfigurasi bisnis
+Integrasi pembayaran otomatis (Midtrans/Xendit) bisa ditambahkan nanti setelah
+memiliki akun merchant — struktur `Order` di database sudah siap untuk itu.
 
-Semua identitas bisnis ada di satu file: [`src/lib/site.ts`](src/lib/site.ts)
-— ganti nomor WhatsApp, email, Instagram, alamat, dan tahun berdiri di sana.
-Data glider ada di [`src/data/gliders.ts`](src/data/gliders.ts), testimoni dan
-FAQ di [`src/data/content.ts`](src/data/content.ts).
+## Database
 
-Foto asli glider tinggal menggantikan komponen `GliderMark` (placeholder SVG)
-dengan `next/image` ketika foto sudah siap.
+- **Sekarang:** SQLite (file `prisma/dev.db`) — nol instalasi, cocok untuk
+  pengembangan lokal. Skema di `prisma/schema.prisma`, data contoh di
+  `prisma/seed.ts`.
+- **Produksi nanti:** ganti ke PostgreSQL (Neon/Supabase) dengan mengganti
+  provider datasource + driver adapter; halaman tidak perlu diubah karena
+  semua akses lewat Prisma. Upload foto juga perlu dipindah ke storage
+  (Supabase Storage / Cloudflare R2) saat deploy ke platform serverless.
 
-## Arsitektur data: sekarang vs jangka panjang
+## Perintah
 
-**Fase 1 (sekarang):** konten disimpan sebagai file TypeScript statis.
-Situs 100% statis (SSG) — cepat, gratis di-hosting, tanpa server database.
-Untuk katalog berukuran puluhan ekor, ini pilihan paling tepat.
-
-**Fase 2 (saat katalog membesar / butuh admin panel):** migrasi ke
-**PostgreSQL + Prisma**. Skemanya sudah disiapkan di
-[`prisma/schema.prisma`](prisma/schema.prisma) dan strukturnya identik dengan
-tipe di `src/lib/types.ts`, jadi migrasinya hanya mengganti implementasi
-fungsi di `src/data/gliders.ts` dengan query Prisma — halaman tidak berubah.
-
-Rekomendasi penyedia PostgreSQL managed (keduanya modern, punya free tier,
-dan sehat untuk jangka panjang):
-
-- **Neon** — serverless Postgres, branching database, pas dengan Vercel.
-- **Supabase** — Postgres + auth + storage foto + dashboard admin bawaan;
-  cocok jika nanti ingin panel admin tanpa banyak koding.
-
-Langkah aktivasi tertulis di komentar atas `prisma/schema.prisma`.
-
-**Fase 3 (opsional):** pembayaran online via **Midtrans/Xendit**, panel admin
-(mis. Supabase Studio atau route `/admin` dengan auth), dan upload foto ke
-storage (Supabase Storage / Cloudflare R2).
-
-## Deployment
-
-Paling sederhana: **Vercel** (pembuat Next.js) — hubungkan repo GitHub ini,
-otomatis deploy tiap push. Alternatif: Cloudflare Pages atau Netlify.
+| Perintah | Fungsi |
+| --- | --- |
+| `npm run dev` | Mode pengembangan (http://localhost:3000) |
+| `npm run setup` | Buat/perbarui database + data contoh |
+| `npm run build` / `npm start` | Build & jalankan versi produksi |
+| `npm run lint` | Cek kualitas kode |

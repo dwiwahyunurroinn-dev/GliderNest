@@ -3,39 +3,39 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { site, waLink } from "@/lib/site";
-import { GliderMark } from "./GliderMark";
+import { Menu, X, ShoppingBag } from "lucide-react";
+import { Mascot } from "./Mascot";
 
 const navItems = [
   { href: "/", label: "Beranda" },
-  { href: "/gliders", label: "Katalog" },
-  { href: "/panduan", label: "Panduan Perawatan" },
-  { href: "/tentang", label: "Tentang Kami" },
+  { href: "/sugar-glider", label: "Sugar Glider" },
+  { href: "/blog", label: "Blog" },
+  { href: "/galeri", label: "Galeri" },
+  { href: "/reseller", label: "Reseller" },
+  { href: "/cara-memesan", label: "Cara Pesan" },
   { href: "/kontak", label: "Kontak" },
 ];
 
-export function SiteHeader() {
+export function SiteHeader({ siteName }: { siteName: string }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-line bg-background/90 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-line bg-background/85 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
-        <Link href="/" className="flex items-center gap-2" onClick={() => setOpen(false)}>
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-night text-brand-soft">
-            <GliderMark className="h-6 w-6" />
+        <Link href="/" className="flex items-center gap-2.5" onClick={() => setOpen(false)}>
+          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-soft ring-1 ring-line">
+            <Mascot className="h-8 w-8" animated={false} />
           </span>
           <span className="font-[family-name:var(--font-display)] text-xl font-semibold tracking-tight">
-            {site.name}
+            {siteName}
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-1 md:flex">
+        <nav className="hidden items-center gap-0.5 lg:flex">
           {navItems.map((item) => {
             const active =
-              item.href === "/"
-                ? pathname === "/"
-                : pathname.startsWith(item.href);
+              item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
             return (
               <Link
                 key={item.href}
@@ -50,14 +50,13 @@ export function SiteHeader() {
               </Link>
             );
           })}
-          <a
-            href={waLink("Halo GliderNest, saya ingin bertanya tentang adopsi sugar glider.")}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="ml-2 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-strong"
+          <Link
+            href="/pesan"
+            className="ml-3 inline-flex items-center gap-2 rounded-full bg-brand px-4.5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-brand-strong hover:shadow-md"
           >
-            Chat WhatsApp
-          </a>
+            <ShoppingBag className="h-4 w-4" />
+            Pesan Sekarang
+          </Link>
         </nav>
 
         <button
@@ -65,38 +64,32 @@ export function SiteHeader() {
           aria-label={open ? "Tutup menu" : "Buka menu"}
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-line md:hidden"
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-line lg:hidden"
         >
-          <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-            {open ? (
-              <path d="M6 6l12 12M18 6L6 18" />
-            ) : (
-              <path d="M4 7h16M4 12h16M4 17h16" />
-            )}
-          </svg>
+          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
 
       {open && (
-        <nav className="border-t border-line bg-background px-4 pb-4 pt-2 md:hidden">
-          {navItems.map((item) => (
+        <nav className="border-t border-line bg-background px-4 pb-5 pt-2 lg:hidden">
+          {[...navItems, { href: "/testimoni", label: "Testimoni" }].map((item) => (
             <Link
               key={item.href}
               href={item.href}
               onClick={() => setOpen(false)}
-              className="block rounded-lg px-3 py-2.5 text-sm font-medium text-foreground hover:bg-brand-soft"
+              className="block rounded-xl px-3 py-2.5 text-sm font-medium hover:bg-brand-soft"
             >
               {item.label}
             </Link>
           ))}
-          <a
-            href={waLink("Halo GliderNest, saya ingin bertanya tentang adopsi sugar glider.")}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-2 block rounded-lg bg-brand px-3 py-2.5 text-center text-sm font-semibold text-white"
+          <Link
+            href="/pesan"
+            onClick={() => setOpen(false)}
+            className="mt-3 flex items-center justify-center gap-2 rounded-full bg-brand px-3 py-3 text-sm font-semibold text-white"
           >
-            Chat WhatsApp
-          </a>
+            <ShoppingBag className="h-4 w-4" />
+            Pesan Sekarang
+          </Link>
         </nav>
       )}
     </header>

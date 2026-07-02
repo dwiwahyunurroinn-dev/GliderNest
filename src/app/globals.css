@@ -1,16 +1,17 @@
 @import "tailwindcss";
 
 :root {
-  --background: #faf7f2;
-  --foreground: #2b2118;
+  --background: #f6faf7;
+  --foreground: #142319;
   --surface: #ffffff;
-  --muted: #7a6a58;
-  --line: #e8e0d4;
-  --brand: #b45309;
-  --brand-strong: #92400e;
-  --brand-soft: #fef3e2;
-  --night: #1c1917;
-  --accent: #365314;
+  --muted: #587263;
+  --line: #dfeae2;
+  --brand: #1e7a4f;
+  --brand-strong: #145c3a;
+  --brand-soft: #e5f4ea;
+  --night: #0c1f15;
+  --gold: #c8a24e;
+  --gold-soft: #f7efdd;
 }
 
 @theme inline {
@@ -23,7 +24,8 @@
   --color-brand-strong: var(--brand-strong);
   --color-brand-soft: var(--brand-soft);
   --color-night: var(--night);
-  --color-accent: var(--accent);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
   --font-sans: var(--font-jakarta);
   --font-display: var(--font-fraunces);
 }
@@ -37,4 +39,67 @@ body {
 ::selection {
   background: var(--brand-soft);
   color: var(--brand-strong);
+}
+
+/* ---------- Animasi ---------- */
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(2deg); }
+}
+
+@keyframes blink {
+  0%, 90%, 100% { transform: scaleY(1); }
+  93%, 96% { transform: scaleY(0.08); }
+}
+
+@keyframes tail-sway {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(6deg); }
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes shimmer {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.06); }
+}
+
+.animate-float { animation: float 6s ease-in-out infinite; }
+.animate-float-slow { animation: float-slow 8s ease-in-out infinite; }
+.animate-shimmer { animation: shimmer 5s ease-in-out infinite; }
+
+.mascot-eye {
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: blink 5.5s ease-in-out infinite;
+}
+
+.mascot-tail {
+  transform-origin: 30% 20%;
+  transform-box: fill-box;
+  animation: tail-sway 4s ease-in-out infinite;
+}
+
+.marquee-track {
+  animation: marquee 40s linear infinite;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-float, .animate-float-slow, .animate-shimmer,
+  .mascot-eye, .mascot-tail, .marquee-track {
+    animation: none;
+  }
 }

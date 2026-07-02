@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { GliderMark } from "@/components/GliderMark";
+import { Mascot } from "@/components/Mascot";
 
 export default function NotFound() {
   return (
-    <div className="mx-auto flex max-w-2xl flex-col items-center px-4 py-24 text-center">
-      <GliderMark className="h-24 w-24 text-line" />
+    <div className="mx-auto flex max-w-2xl flex-col items-center px-4 py-28 text-center">
+      <Mascot className="h-32 w-32 opacity-70" />
       <h1 className="mt-6 font-[family-name:var(--font-display)] text-3xl font-semibold">
         Halaman tidak ditemukan
       </h1>
