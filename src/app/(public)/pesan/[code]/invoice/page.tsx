@@ -11,7 +11,7 @@ import {
   paymentMethodLabel,
 } from "@/lib/format";
 import { BrandMark } from "@/components/BrandMark";
-import { PrintButton } from "@/components/PrintButton";
+import { InvoiceActions } from "@/components/InvoiceActions";
 
 export const dynamic = "force-dynamic";
 
@@ -37,7 +37,7 @@ export default async function InvoicePage({
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6 print:max-w-none print:px-0 print:py-0">
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3 print:hidden">
+      <div className="mb-6 space-y-4 print:hidden">
         <Link
           href={`/pesan/${order.code}`}
           className="inline-flex items-center gap-1.5 text-sm font-medium text-muted transition-colors hover:text-brand-strong"
@@ -45,11 +45,14 @@ export default async function InvoicePage({
           <ArrowLeft className="h-4 w-4" />
           Kembali ke detail pesanan
         </Link>
-        <PrintButton />
+        <InvoiceActions code={order.code} />
       </div>
 
       {/* Lembar invoice */}
-      <div className="rounded-3xl border border-line bg-white p-8 text-[#1b2a41] shadow-sm sm:p-10 print:rounded-none print:border-0 print:p-6 print:shadow-none">
+      <div
+        id="invoice-sheet"
+        className="rounded-3xl border border-line bg-white p-6 text-[#1b2a41] shadow-sm sm:p-10 print:rounded-none print:border-0 print:p-6 print:shadow-none"
+      >
         <div className="flex flex-wrap items-start justify-between gap-4 border-b border-slate-200 pb-6">
           <div className="flex items-center gap-3">
             <span className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl bg-slate-100">
