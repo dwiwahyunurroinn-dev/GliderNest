@@ -5,7 +5,7 @@ import { ArrowLeft, ShoppingBag, ShieldCheck } from "lucide-react";
 import { prisma } from "@/lib/db";
 import { getSettings } from "@/lib/settings";
 import { formatPrice, morphGradient, splitTraits } from "@/lib/format";
-import { Mascot } from "@/components/Mascot";
+import { PawPrint } from "lucide-react";
 import { StatusPill } from "@/components/StatusPill";
 import { WhatsAppCta } from "@/components/WhatsAppCta";
 
@@ -66,7 +66,10 @@ export default async function GliderDetailPage({
               className="h-full w-full object-cover"
             />
           ) : (
-            <Mascot className="h-52 w-52 opacity-80" />
+            <span className="flex flex-col items-center gap-3 text-brand-strong/50">
+              <PawPrint className="h-24 w-24" strokeWidth={1.5} />
+              <span className="text-sm font-semibold">Foto segera diunggah</span>
+            </span>
           )}
         </div>
 
@@ -171,7 +174,7 @@ export default async function GliderDetailPage({
                         className="h-full w-full object-cover"
                       />
                     ) : (
-                      <Mascot className="h-11 w-11" animated={false} />
+                      <PawPrint className="h-8 w-8 text-brand-strong/50" strokeWidth={1.5} />
                     )}
                   </span>
                   <span>

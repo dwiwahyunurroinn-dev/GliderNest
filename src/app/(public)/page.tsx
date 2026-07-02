@@ -16,7 +16,7 @@ import { prisma } from "@/lib/db";
 import { getSettings, waLink } from "@/lib/settings";
 import { formatDate } from "@/lib/format";
 import { GliderCard } from "@/components/GliderCard";
-import { HeroGlider } from "@/components/HeroGlider";
+import { NatureScene } from "@/components/NatureScene";
 import { Reveal } from "@/components/Reveal";
 import { SectionHeading } from "@/components/SectionHeading";
 import { TiltCard } from "@/components/TiltCard";
@@ -97,19 +97,15 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* ===== Hero cerah dengan maskot terbang 3D ===== */}
+      {/* ===== Hero dengan background alam ===== */}
       <section className="relative overflow-hidden">
-        <div
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(55% 65% at 80% 12%, rgba(37,99,235,0.14), transparent), radial-gradient(45% 55% at 8% 85%, rgba(245,158,11,0.12), transparent), linear-gradient(180deg, #eef5ff 0%, #f5f8ff 60%, #ffffff 100%)",
-          }}
-        />
-        <div className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 animate-shimmer rounded-full bg-brand/15 blur-3xl" />
-        <div className="pointer-events-none absolute -left-20 bottom-0 h-72 w-72 animate-shimmer rounded-full bg-gold/15 blur-3xl" />
+        {/* pemandangan alam biru soft memenuhi hero */}
+        <NatureScene className="pointer-events-none absolute inset-0 h-full w-full" />
+        {/* lapisan pemutih di sisi teks agar tulisan tetap jelas terbaca */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-white/85 via-white/55 to-transparent" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-background to-transparent" />
 
-        <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 py-16 sm:px-6 md:grid-cols-2 md:py-24">
+        <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 py-20 sm:px-6 md:grid-cols-[1.1fr_0.9fr] md:py-28">
           <div>
             <Reveal>
               <p className="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-4 py-1.5 text-xs font-semibold tracking-wide text-brand-strong shadow-sm">
@@ -120,7 +116,7 @@ export default async function HomePage() {
             <Reveal delay={100}>
               <h1 className="mt-6 font-[family-name:var(--font-display)] text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl md:text-6xl">
                 Sahabat kecil yang{" "}
-                <span className="text-gradient">meluncur</span> ke hati
+                <span className="text-brand-strong">meluncur</span> ke hati
                 keluarga Anda.
               </h1>
             </Reveal>
@@ -155,7 +151,7 @@ export default async function HomePage() {
               </div>
             </Reveal>
             <Reveal delay={400}>
-              <dl className="mt-10 grid max-w-md grid-cols-3 gap-4 border-t border-line pt-6">
+              <dl className="mt-10 grid max-w-md grid-cols-3 gap-4 rounded-2xl border border-line bg-surface/85 p-5 shadow-sm backdrop-blur">
                 {[
                   ["150+", "Joey diadopsi"],
                   ["6", "Morph tersedia"],
@@ -170,10 +166,42 @@ export default async function HomePage() {
             </Reveal>
           </div>
 
-          <HeroGlider
-            mascotUrl={settings.mascotUrl}
-            className="h-80 sm:h-96 md:h-[26rem]"
-          />
+          {/* kartu ringkas mengambang di atas pemandangan */}
+          <div className="hidden flex-col items-end gap-4 md:flex">
+            <Reveal delay={200}>
+              <div className="animate-float-slow w-72 rounded-3xl border border-line bg-surface/90 p-5 shadow-lg shadow-brand/10 backdrop-blur">
+                <p className="flex items-center gap-2 text-sm font-bold">
+                  <ShieldCheck className="h-4.5 w-4.5 text-brand" />
+                  Garansi kesehatan 7 hari
+                </p>
+                <p className="mt-1.5 text-xs leading-relaxed text-muted">
+                  Tertulis di setiap adopsi, plus rekam pakan & berat badan joey.
+                </p>
+              </div>
+            </Reveal>
+            <Reveal delay={350}>
+              <div className="animate-float w-72 rounded-3xl border border-line bg-surface/90 p-5 shadow-lg shadow-brand/10 backdrop-blur">
+                <p className="flex items-center gap-2 text-sm font-bold">
+                  <HeartHandshake className="h-4.5 w-4.5 text-brand" />
+                  Pendampingan seumur hidup
+                </p>
+                <p className="mt-1.5 text-xs leading-relaxed text-muted">
+                  Grup konsultasi adopter aktif setiap hari — Anda tidak sendirian.
+                </p>
+              </div>
+            </Reveal>
+            <Reveal delay={500}>
+              <div className="animate-float-slow w-72 rounded-3xl border border-line bg-surface/90 p-5 shadow-lg shadow-brand/10 backdrop-blur">
+                <p className="flex items-center gap-2 text-sm font-bold">
+                  <Leaf className="h-4.5 w-4.5 text-brand" />
+                  100% hasil penangkaran etis
+                </p>
+                <p className="mt-1.5 text-xs leading-relaxed text-muted">
+                  Bukan tangkapan alam — legal, sehat, dan tersertifikasi silsilah.
+                </p>
+              </div>
+            </Reveal>
+          </div>
         </div>
       </section>
 
@@ -345,7 +373,7 @@ export default async function HomePage() {
       </section>
 
       {/* ===== Testimoni (cerah) ===== */}
-      <section className="border-y border-line bg-gradient-to-br from-brand-soft via-sky to-gold-soft">
+      <section className="border-y border-line bg-sky">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-24">
           <Reveal>
             <div className="flex flex-wrap items-end justify-between gap-4">

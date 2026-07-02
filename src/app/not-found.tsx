@@ -1,15 +1,17 @@
 import Link from "next/link";
-import { Mascot } from "@/components/Mascot";
+import { Compass } from "lucide-react";
 
 export default function NotFound() {
   return (
     <div className="mx-auto flex max-w-2xl flex-col items-center px-4 py-28 text-center">
-      <Mascot className="h-32 w-32 opacity-70" />
+      <span className="flex h-24 w-24 items-center justify-center rounded-full bg-brand-soft">
+        <Compass className="h-12 w-12 text-brand" strokeWidth={1.5} />
+      </span>
       <h1 className="mt-6 font-[family-name:var(--font-display)] text-3xl font-semibold">
         Halaman tidak ditemukan
       </h1>
       <p className="mt-3 text-muted">
-        Sepertinya glider yang Anda cari sudah meluncur ke tempat lain.
+        Sepertinya halaman yang Anda cari sudah pindah atau tidak pernah ada.
       </p>
       <Link
         href="/"

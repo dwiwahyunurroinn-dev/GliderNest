@@ -84,12 +84,12 @@ export default async function AdminSettingsPage({
                   />
                   <label className="flex items-center gap-2 text-xs font-medium text-red-600">
                     <input type="checkbox" name="resetLogo" className="h-3.5 w-3.5 accent-red-600" />
-                    Hapus & kembalikan ke maskot bawaan
+                    Hapus & kembalikan ke ikon bawaan
                   </label>
                 </div>
               ) : (
                 <p className="mt-1.5 text-xs text-muted">
-                  Belum ada logo — saat ini memakai maskot bawaan.
+                  Belum ada logo — saat ini memakai ikon bawaan.
                 </p>
               )}
             </div>
@@ -97,8 +97,8 @@ export default async function AdminSettingsPage({
               <label htmlFor="mascotImage" className={labelCls}>
                 Gambar maskot{" "}
                 <span className="font-normal text-muted">
-                  (tampil besar di beranda, tentang kami, reseller; PNG transparan
-                  paling bagus)
+                  (opsional — saat ini halaman publik tampil tanpa maskot;
+                  gambar disimpan untuk kebutuhan mendatang)
                 </span>
               </label>
               <input id="mascotImage" name="mascotImage" type="file" accept="image/*" className={inputCls} />
@@ -117,7 +117,7 @@ export default async function AdminSettingsPage({
                 </div>
               ) : (
                 <p className="mt-1.5 text-xs text-muted">
-                  Belum ada gambar kustom — saat ini memakai maskot “Gigi” bawaan.
+                  Belum ada gambar maskot tersimpan.
                 </p>
               )}
             </div>

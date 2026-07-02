@@ -148,7 +148,7 @@ export default async function HowToOrderPage() {
               </div>
             ))}
           </div>
-          <p className="mt-4 rounded-2xl bg-gold-soft px-5 py-4 text-xs leading-relaxed text-foreground/80">
+          <p className="mt-4 rounded-2xl bg-brand-soft px-5 py-4 text-xs leading-relaxed text-foreground/80">
             <strong>Penting:</strong> pembayaran hanya ke rekening/akun resmi
             yang tercantum pada halaman instruksi pesanan Anda. Kami tidak
             pernah meminta pembayaran ke rekening lain via telepon.

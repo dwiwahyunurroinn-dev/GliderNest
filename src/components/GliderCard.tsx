@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Glider } from "@/generated/prisma/client";
 import { formatPrice, morphGradient, splitTraits } from "@/lib/format";
-import { Mascot } from "./Mascot";
+import { PawPrint } from "lucide-react";
 import { StatusPill } from "./StatusPill";
 import { TiltCard } from "./TiltCard";
 
@@ -22,10 +22,10 @@ export function GliderCard({ glider }: { glider: Glider }) {
               className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
           ) : (
-            <Mascot
-              className="h-36 w-36 transition-transform duration-500 group-hover:scale-110"
-              animated={false}
-            />
+            <span className="flex flex-col items-center gap-2 text-brand-strong/50">
+              <PawPrint className="h-16 w-16 transition-transform duration-500 group-hover:scale-110" strokeWidth={1.5} />
+              <span className="text-xs font-semibold">Foto menyusul</span>
+            </span>
           )}
           <span className="absolute left-3.5 top-3.5">
             <StatusPill status={glider.status} />

@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import { prisma } from "@/lib/db";
 import { getSettings } from "@/lib/settings";
-import { MascotDisplay } from "@/components/BrandMark";
+import { NatureScene } from "@/components/NatureScene";
 import { Reveal } from "@/components/Reveal";
 import { SectionHeading } from "@/components/SectionHeading";
 import { WhatsAppCta } from "@/components/WhatsAppCta";
@@ -79,12 +79,11 @@ export default async function AboutPage() {
           </div>
         </Reveal>
         <Reveal delay={150}>
-          <div className="relative mx-auto flex max-w-sm items-center justify-center">
-            <div className="absolute h-72 w-72 rounded-full bg-brand-soft blur-2xl" />
-            <MascotDisplay
-              mascotUrl={settings.mascotUrl}
-              className="animate-float relative h-72 w-72"
-            />
+          <div className="relative h-72 overflow-hidden rounded-[2rem] border border-line shadow-lg shadow-brand/10 lg:h-80">
+            <NatureScene className="absolute inset-0 h-full w-full" />
+            <span className="absolute bottom-4 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-surface/90 px-5 py-2 text-xs font-semibold text-brand-strong shadow-sm backdrop-blur">
+              Habitat asli sugar glider: hutan yang tenang 🌿
+            </span>
           </div>
         </Reveal>
       </div>

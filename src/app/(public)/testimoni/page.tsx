@@ -54,7 +54,7 @@ export default async function TestimonialPage() {
         ))}
       </div>
 
-      <div className="mt-14 rounded-[2rem] border border-line bg-gradient-to-br from-brand-soft via-sky to-gold-soft p-8 text-center sm:p-12">
+      <div className="mt-14 rounded-[2rem] border border-line bg-sky p-8 text-center sm:p-12">
         <h2 className="font-[family-name:var(--font-display)] text-2xl font-semibold">
           Sudah adopsi dari kami?
         </h2>

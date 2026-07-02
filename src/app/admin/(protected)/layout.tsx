@@ -38,7 +38,7 @@ export default async function AdminLayout({
       <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r border-line bg-surface p-5 md:flex">
         <Link href="/admin" className="flex items-center gap-2.5 px-2">
           <span className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-brand-soft ring-1 ring-line">
-            <BrandMark logoUrl={settings.logoUrl} className="h-8 w-8" />
+            <BrandMark logoUrl={settings.logoUrl} className="h-8 w-8" fallback="mascot" />
           </span>
           <span>
             <span className="block font-[family-name:var(--font-display)] font-semibold">

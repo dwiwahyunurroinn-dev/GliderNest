@@ -81,7 +81,7 @@ model Setting {
   siteName     String @default("GliderNest")
   tagline      String @default("Peternakan Sugar Glider Terpercaya")
   description  String @default("")
-  whatsapp     String @default("6281234567890")
+  whatsapp     String @default("6287734777846")
   email        String @default("halo@glidernest.id")
   instagram    String @default("glidernest.id")
   address      String @default("Sleman, Yogyakarta, Indonesia")

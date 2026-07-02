@@ -1,9 +1,10 @@
 # GliderNest 🌿
 
 Website e-commerce & branding untuk peternakan sugar glider — lengkap dengan
-**panel admin**, **database**, **sistem pemesanan**, maskot, dan tema hijau
-premium. Dibangun dengan Next.js 16 (App Router) + TypeScript + Tailwind CSS
-v4 + Prisma (SQLite).
+**panel admin**, **database**, dan **sistem pemesanan**. Desain biru soft
+modern dengan hero berlatar pemandangan alam, kartu 3D interaktif, dan
+contact person WhatsApp yang tampil di semua halaman. Dibangun dengan
+Next.js 16 (App Router) + TypeScript + Tailwind CSS v4 + Prisma (SQLite).
 
 ## Cara menjalankan (Arch Linux)
 

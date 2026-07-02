@@ -1,12 +1,19 @@
+import { PawPrint } from "lucide-react";
 import { Mascot } from "./Mascot";
 
-/** Logo situs: pakai gambar dari pengaturan admin, atau maskot bawaan. */
+/**
+ * Logo situs. Prioritas: logo yang diunggah admin → ikon bawaan.
+ * `fallback="mascot"` hanya dipakai di panel admin (halaman publik tanpa
+ * maskot sesuai arahan pemilik).
+ */
 export function BrandMark({
   logoUrl,
   className = "",
+  fallback = "icon",
 }: {
   logoUrl?: string;
   className?: string;
+  fallback?: "icon" | "mascot";
 }) {
   if (logoUrl) {
     return (
@@ -18,28 +25,8 @@ export function BrandMark({
       />
     );
   }
-  return <Mascot className={className} animated={false} />;
-}
-
-/** Maskot besar (hero, halaman promosi): gambar kustom atau SVG bawaan. */
-export function MascotDisplay({
-  mascotUrl,
-  className = "",
-  animated = true,
-}: {
-  mascotUrl?: string;
-  className?: string;
-  animated?: boolean;
-}) {
-  if (mascotUrl) {
-    return (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img
-        src={mascotUrl}
-        alt="Maskot"
-        className={`${className} object-contain`}
-      />
-    );
+  if (fallback === "mascot") {
+    return <Mascot className={className} animated={false} />;
   }
-  return <Mascot className={className} animated={animated} />;
+  return <PawPrint className={`${className} p-1 text-brand`} strokeWidth={2} />;
 }

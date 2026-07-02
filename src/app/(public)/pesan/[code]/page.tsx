@@ -198,7 +198,7 @@ export default async function OrderDetailPage({
               </strong>
               .
             </p>
-            <p className="mt-3 rounded-2xl bg-gold-soft px-4 py-3 text-xs leading-relaxed text-foreground/80">
+            <p className="mt-3 rounded-2xl bg-brand-soft px-4 py-3 text-xs leading-relaxed text-foreground/80">
               Jika alamat Anda di luar area COD, kami akan tawarkan opsi
               pengiriman kurir hewan atau metode pembayaran lain saat konfirmasi.
             </p>
