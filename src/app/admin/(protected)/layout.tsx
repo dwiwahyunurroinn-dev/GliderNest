@@ -11,7 +11,8 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { requireAdmin } from "@/lib/auth";
-import { Mascot } from "@/components/Mascot";
+import { getSettings } from "@/lib/settings";
+import { BrandMark } from "@/components/BrandMark";
 import { logout } from "./actions";
 
 const menu = [
@@ -30,19 +31,20 @@ export default async function AdminLayout({
   children: React.ReactNode;
 }) {
   await requireAdmin();
+  const settings = await getSettings();
 
   return (
     <div className="flex min-h-screen bg-background">
-      <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col bg-night p-5 text-emerald-50 md:flex">
+      <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r border-line bg-surface p-5 md:flex">
         <Link href="/admin" className="flex items-center gap-2.5 px-2">
-          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10">
-            <Mascot className="h-8 w-8" animated={false} />
+          <span className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-brand-soft ring-1 ring-line">
+            <BrandMark logoUrl={settings.logoUrl} className="h-8 w-8" />
           </span>
           <span>
-            <span className="block font-[family-name:var(--font-display)] font-semibold text-white">
-              GliderNest
+            <span className="block font-[family-name:var(--font-display)] font-semibold">
+              {settings.siteName}
             </span>
-            <span className="block text-xs text-emerald-100/50">Panel Admin</span>
+            <span className="block text-xs font-medium text-muted">Panel Admin</span>
           </span>
         </Link>
 
@@ -51,7 +53,7 @@ export default async function AdminLayout({
             <Link
               key={item.href}
               href={item.href}
-              className="flex items-center gap-3 rounded-2xl px-3.5 py-2.5 text-sm font-medium text-emerald-100/70 transition-colors hover:bg-white/10 hover:text-white"
+              className="flex items-center gap-3 rounded-2xl px-3.5 py-2.5 text-sm font-semibold text-muted transition-colors hover:bg-brand-soft hover:text-brand-strong"
             >
               <item.icon className="h-4.5 w-4.5" />
               {item.label}
@@ -59,11 +61,11 @@ export default async function AdminLayout({
           ))}
         </nav>
 
-        <div className="space-y-1 border-t border-white/10 pt-4">
+        <div className="space-y-1 border-t border-line pt-4">
           <Link
             href="/"
             target="_blank"
-            className="flex items-center gap-3 rounded-2xl px-3.5 py-2.5 text-sm font-medium text-emerald-100/70 transition-colors hover:bg-white/10 hover:text-white"
+            className="flex items-center gap-3 rounded-2xl px-3.5 py-2.5 text-sm font-semibold text-muted transition-colors hover:bg-brand-soft hover:text-brand-strong"
           >
             <ExternalLink className="h-4.5 w-4.5" />
             Lihat Website
@@ -71,7 +73,7 @@ export default async function AdminLayout({
           <form action={logout}>
             <button
               type="submit"
-              className="flex w-full items-center gap-3 rounded-2xl px-3.5 py-2.5 text-sm font-medium text-red-300 transition-colors hover:bg-red-500/10"
+              className="flex w-full items-center gap-3 rounded-2xl px-3.5 py-2.5 text-sm font-semibold text-red-500 transition-colors hover:bg-red-50"
             >
               <LogOut className="h-4.5 w-4.5" />
               Keluar
@@ -96,7 +98,7 @@ export default async function AdminLayout({
           <form action={logout} className="shrink-0">
             <button
               type="submit"
-              className="flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-semibold text-red-600"
+              className="flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-semibold text-red-500"
             >
               <LogOut className="h-3.5 w-3.5" />
               Keluar

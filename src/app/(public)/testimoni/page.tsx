@@ -54,11 +54,11 @@ export default async function TestimonialPage() {
         ))}
       </div>
 
-      <div className="mt-14 rounded-[2rem] bg-night p-8 text-center text-emerald-50 sm:p-12">
-        <h2 className="font-[family-name:var(--font-display)] text-2xl font-semibold text-white">
+      <div className="mt-14 rounded-[2rem] border border-line bg-gradient-to-br from-brand-soft via-sky to-gold-soft p-8 text-center sm:p-12">
+        <h2 className="font-[family-name:var(--font-display)] text-2xl font-semibold">
           Sudah adopsi dari kami?
         </h2>
-        <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-emerald-100/70">
+        <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-muted">
           Bagikan pengalaman Anda — ceritanya membantu calon adopter lain
           mengambil keputusan yang tepat.
         </p>

@@ -90,19 +90,19 @@ export default async function AboutPage() {
       </div>
 
       <Reveal>
-        <div className="mt-16 rounded-[2rem] bg-night p-8 text-emerald-50 sm:p-12">
-          <h2 className="font-[family-name:var(--font-display)] text-2xl font-semibold text-white sm:text-3xl">
+        <div className="mt-16 rounded-[2rem] border border-line bg-gradient-to-br from-brand-soft via-sky to-white p-8 shadow-sm sm:p-12">
+          <h2 className="font-[family-name:var(--font-display)] text-2xl font-semibold text-brand-strong sm:text-3xl">
             Misi kami sederhana
           </h2>
           <div className="mt-5 grid gap-6 md:grid-cols-2">
-            <p className="leading-relaxed text-emerald-100/75">
+            <p className="leading-relaxed text-foreground/80">
               Sugar glider adalah hewan sosial berumur panjang yang sering
               dibeli impulsif lalu ditelantarkan. Kami ingin mengubah itu:
               setiap joey dari {settings.siteName} pulang ke rumah yang sudah
               siap — pemiliknya paham pakan, bonding, dan komitmen jangka
               panjangnya.
             </p>
-            <p className="leading-relaxed text-emerald-100/75">
+            <p className="leading-relaxed text-foreground/80">
               Karena itu kami tidak hanya menjual. Kami mendampingi. Grup
               adopter kami aktif setiap hari untuk konsultasi, dan garansi
               kesehatan kami tertulis di setiap adopsi — bukan janji lisan.

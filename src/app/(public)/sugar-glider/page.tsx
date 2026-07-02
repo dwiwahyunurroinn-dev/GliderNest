@@ -53,7 +53,7 @@ export default async function CatalogPage({
             }
             className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
               active === f.value
-                ? "bg-night text-white"
+                ? "bg-brand text-white shadow-md shadow-brand/25"
                 : "border border-line bg-surface text-muted hover:border-brand hover:text-brand-strong"
             }`}
           >

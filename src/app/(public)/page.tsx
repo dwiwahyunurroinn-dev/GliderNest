@@ -16,9 +16,10 @@ import { prisma } from "@/lib/db";
 import { getSettings, waLink } from "@/lib/settings";
 import { formatDate } from "@/lib/format";
 import { GliderCard } from "@/components/GliderCard";
-import { MascotDisplay } from "@/components/BrandMark";
+import { HeroGlider } from "@/components/HeroGlider";
 import { Reveal } from "@/components/Reveal";
 import { SectionHeading } from "@/components/SectionHeading";
+import { TiltCard } from "@/components/TiltCard";
 
 export const dynamic = "force-dynamic";
 
@@ -62,8 +63,8 @@ const orderSteps = [
   },
   {
     icon: Wallet,
-    title: "Pembayaran Mudah",
-    description: "QRIS, transfer bank / m-banking, atau DANA — bukti tertulis.",
+    title: "Pembayaran Fleksibel",
+    description: "QRIS, transfer / m-banking, DANA, COD area terdekat, atau rekber.",
   },
   {
     icon: PackageCheck,
@@ -73,7 +74,7 @@ const orderSteps = [
 ];
 
 export default async function HomePage() {
-  const [settings, featured, articles, testimonials, gallery, adopted] =
+  const [settings, featured, articles, testimonials, gallery] =
     await Promise.all([
       getSettings(),
       prisma.glider.findMany({
@@ -92,38 +93,39 @@ export default async function HomePage() {
         take: 3,
       }),
       prisma.galleryItem.findMany({ orderBy: { createdAt: "desc" }, take: 8 }),
-      prisma.order.count({ where: { status: "selesai" } }),
     ]);
 
   return (
     <>
-      {/* ===== Hero ===== */}
-      <section className="relative overflow-hidden bg-night text-emerald-50">
+      {/* ===== Hero cerah dengan maskot terbang 3D ===== */}
+      <section className="relative overflow-hidden">
         <div
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              "radial-gradient(55% 70% at 82% 18%, rgba(30,122,79,0.55), transparent), radial-gradient(45% 60% at 8% 88%, rgba(200,162,78,0.18), transparent)",
+              "radial-gradient(55% 65% at 80% 12%, rgba(37,99,235,0.14), transparent), radial-gradient(45% 55% at 8% 85%, rgba(245,158,11,0.12), transparent), linear-gradient(180deg, #eef5ff 0%, #f5f8ff 60%, #ffffff 100%)",
           }}
         />
-        <div className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 animate-shimmer rounded-full bg-brand/20 blur-3xl" />
-        <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-4 py-20 sm:px-6 md:grid-cols-2 md:py-28">
+        <div className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 animate-shimmer rounded-full bg-brand/15 blur-3xl" />
+        <div className="pointer-events-none absolute -left-20 bottom-0 h-72 w-72 animate-shimmer rounded-full bg-gold/15 blur-3xl" />
+
+        <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 py-16 sm:px-6 md:grid-cols-2 md:py-24">
           <div>
             <Reveal>
-              <p className="inline-flex items-center gap-2 rounded-full border border-emerald-100/15 bg-white/5 px-4 py-1.5 text-xs font-medium tracking-wide text-emerald-100/80">
-                <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" />
+              <p className="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-4 py-1.5 text-xs font-semibold tracking-wide text-brand-strong shadow-sm">
+                <span className="h-2 w-2 animate-pulse rounded-full bg-brand" />
                 Peternakan aktif sejak {settings.foundedYear} · {settings.address}
               </p>
             </Reveal>
             <Reveal delay={100}>
-              <h1 className="mt-6 font-[family-name:var(--font-display)] text-4xl font-semibold leading-[1.1] tracking-tight text-white sm:text-5xl md:text-6xl">
+              <h1 className="mt-6 font-[family-name:var(--font-display)] text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl md:text-6xl">
                 Sahabat kecil yang{" "}
-                <span className="text-gold">meluncur</span> ke hati keluarga
-                Anda.
+                <span className="text-gradient">meluncur</span> ke hati
+                keluarga Anda.
               </h1>
             </Reveal>
             <Reveal delay={200}>
-              <p className="mt-5 max-w-xl leading-relaxed text-emerald-100/70">
+              <p className="mt-5 max-w-xl text-lg leading-relaxed text-muted">
                 {settings.siteName} membesarkan setiap joey dengan handling
                 harian, nutrisi tercatat, dan pendampingan seumur hidup —
                 supaya Anda memelihara dengan percaya diri sejak hari pertama.
@@ -133,7 +135,7 @@ export default async function HomePage() {
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
                   href="/sugar-glider"
-                  className="group inline-flex items-center gap-2 rounded-full bg-brand px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-brand/25 transition-all hover:bg-brand-strong"
+                  className="group inline-flex items-center gap-2 rounded-full bg-brand px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-brand/30 transition-all hover:-translate-y-0.5 hover:bg-brand-strong hover:shadow-xl hover:shadow-brand/30"
                 >
                   Lihat Katalog
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -145,7 +147,7 @@ export default async function HomePage() {
                   )}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full border border-emerald-100/20 px-6 py-3.5 text-sm font-semibold text-emerald-50 transition-colors hover:border-gold hover:text-gold"
+                  className="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-7 py-3.5 text-sm font-semibold text-foreground shadow-sm transition-all hover:-translate-y-0.5 hover:border-brand hover:text-brand-strong"
                 >
                   <MessageCircle className="h-4 w-4" />
                   Konsultasi Gratis
@@ -153,38 +155,30 @@ export default async function HomePage() {
               </div>
             </Reveal>
             <Reveal delay={400}>
-              <dl className="mt-10 grid max-w-md grid-cols-3 gap-4 border-t border-white/10 pt-6">
+              <dl className="mt-10 grid max-w-md grid-cols-3 gap-4 border-t border-line pt-6">
                 {[
                   ["150+", "Joey diadopsi"],
                   ["6", "Morph tersedia"],
-                  [`${adopted >= 1 ? adopted : "100%"}`, adopted >= 1 ? "Pesanan selesai" : "Captive-bred"],
+                  ["100%", "Captive-bred"],
                 ].map(([value, label]) => (
                   <div key={label}>
-                    <dt className="text-2xl font-semibold text-white">{value}</dt>
-                    <dd className="mt-1 text-xs text-emerald-100/60">{label}</dd>
+                    <dt className="text-3xl font-bold text-brand-strong">{value}</dt>
+                    <dd className="mt-1 text-xs font-medium text-muted">{label}</dd>
                   </div>
                 ))}
               </dl>
             </Reveal>
           </div>
 
-          <div className="relative hidden items-center justify-center md:flex">
-            <div className="absolute h-80 w-80 rounded-full bg-gradient-to-br from-brand/40 via-emerald-400/10 to-gold/20 blur-2xl" />
-            <div className="animate-float relative">
-              <MascotDisplay
-                mascotUrl={settings.mascotUrl}
-                className="h-80 w-80 drop-shadow-2xl"
-              />
-            </div>
-            <span className="absolute -bottom-2 rounded-full border border-white/10 bg-white/10 px-5 py-2.5 text-xs font-semibold text-emerald-50 backdrop-blur">
-              Hai! Aku Gigi, maskot {settings.siteName} 🌿
-            </span>
-          </div>
+          <HeroGlider
+            mascotUrl={settings.mascotUrl}
+            className="h-80 sm:h-96 md:h-[26rem]"
+          />
         </div>
       </section>
 
-      {/* ===== Poin kepercayaan ===== */}
-      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-24">
+      {/* ===== Poin kepercayaan (kartu 3D) ===== */}
+      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-24">
         <Reveal>
           <SectionHeading
             eyebrow={`Kenapa ${settings.siteName}`}
@@ -195,23 +189,23 @@ export default async function HomePage() {
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {trustPoints.map((point, i) => (
             <Reveal key={point.title} delay={i * 100}>
-              <div className="group h-full rounded-3xl border border-line bg-surface p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-brand/30 hover:shadow-lg hover:shadow-brand/5">
-                <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-soft text-brand transition-colors group-hover:bg-brand group-hover:text-white">
+              <TiltCard className="h-full rounded-3xl border border-line bg-surface p-6 shadow-sm">
+                <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-brand to-brand-strong text-white shadow-md shadow-brand/25">
                   <point.icon className="h-5 w-5" />
                 </span>
                 <h3 className="mt-4 font-semibold">{point.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted">
                   {point.description}
                 </p>
-              </div>
+              </TiltCard>
             </Reveal>
           ))}
         </div>
       </section>
 
       {/* ===== Glider unggulan ===== */}
-      <section className="border-y border-line bg-brand-soft/40">
-        <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-24">
+      <section className="border-y border-line bg-sky">
+        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-24">
           <Reveal>
             <div className="flex flex-wrap items-end justify-between gap-4">
               <SectionHeading
@@ -221,7 +215,7 @@ export default async function HomePage() {
               />
               <Link
                 href="/sugar-glider"
-                className="group inline-flex items-center gap-2 rounded-full border border-line bg-surface px-5 py-2.5 text-sm font-semibold transition-colors hover:border-brand hover:text-brand-strong"
+                className="group inline-flex items-center gap-2 rounded-full border border-line bg-surface px-5 py-2.5 text-sm font-semibold shadow-sm transition-all hover:-translate-y-0.5 hover:border-brand hover:text-brand-strong"
               >
                 Lihat semua
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -239,7 +233,7 @@ export default async function HomePage() {
       </section>
 
       {/* ===== Cara memesan ===== */}
-      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-24">
+      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-24">
         <Reveal>
           <div className="flex flex-wrap items-end justify-between gap-4">
             <SectionHeading
@@ -258,19 +252,21 @@ export default async function HomePage() {
         <ol className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {orderSteps.map((step, i) => (
             <Reveal key={step.title} delay={i * 100}>
-              <li className="relative h-full rounded-3xl border border-line bg-surface p-6 shadow-sm">
-                <div className="flex items-center justify-between">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-soft text-brand">
-                    <step.icon className="h-5 w-5" />
-                  </span>
-                  <span className="font-[family-name:var(--font-display)] text-4xl font-semibold text-brand/15">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                </div>
-                <h3 className="mt-4 font-semibold">{step.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted">
-                  {step.description}
-                </p>
+              <li className="h-full">
+                <TiltCard className="h-full rounded-3xl border border-line bg-surface p-6 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-soft text-brand">
+                      <step.icon className="h-5 w-5" />
+                    </span>
+                    <span className="font-[family-name:var(--font-display)] text-4xl font-semibold text-brand/15">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                  </div>
+                  <h3 className="mt-4 font-semibold">{step.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted">
+                    {step.description}
+                  </p>
+                </TiltCard>
               </li>
             </Reveal>
           ))}
@@ -285,7 +281,7 @@ export default async function HomePage() {
               <Link
                 key={`${item.id}-${i}`}
                 href="/galeri"
-                className="group relative block h-44 w-64 shrink-0 overflow-hidden rounded-2xl border border-line"
+                className="group relative block h-44 w-64 shrink-0 overflow-hidden rounded-2xl border border-line shadow-sm transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -293,7 +289,7 @@ export default async function HomePage() {
                   alt={item.title}
                   className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
-                <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-night/80 to-transparent px-4 pb-3 pt-8 text-xs font-medium text-white opacity-0 transition-opacity group-hover:opacity-100">
+                <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-brand-strong/80 to-transparent px-4 pb-3 pt-8 text-xs font-medium text-white opacity-0 transition-opacity group-hover:opacity-100">
                   {item.title}
                 </span>
               </Link>
@@ -303,7 +299,7 @@ export default async function HomePage() {
       )}
 
       {/* ===== Blog ===== */}
-      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-24">
+      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-24">
         <Reveal>
           <div className="flex flex-wrap items-end justify-between gap-4">
             <SectionHeading
@@ -313,7 +309,7 @@ export default async function HomePage() {
             />
             <Link
               href="/blog"
-              className="group inline-flex items-center gap-2 rounded-full border border-line bg-surface px-5 py-2.5 text-sm font-semibold transition-colors hover:border-brand hover:text-brand-strong"
+              className="group inline-flex items-center gap-2 rounded-full border border-line bg-surface px-5 py-2.5 text-sm font-semibold shadow-sm transition-all hover:-translate-y-0.5 hover:border-brand hover:text-brand-strong"
             >
               Semua artikel
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -323,45 +319,43 @@ export default async function HomePage() {
         <div className="mt-10 grid gap-6 md:grid-cols-3">
           {articles.map((article, i) => (
             <Reveal key={article.id} delay={i * 120}>
-              <Link
-                href={`/blog/${article.slug}`}
-                className="group flex h-full flex-col rounded-3xl border border-line bg-surface p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-brand/5"
-              >
-                <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-brand-soft px-3 py-1 text-xs font-semibold text-brand-strong">
-                  <BookOpenCheck className="h-3.5 w-3.5" />
-                  Edukasi
-                </span>
-                <h3 className="mt-4 font-[family-name:var(--font-display)] text-lg font-semibold leading-snug transition-colors group-hover:text-brand-strong">
-                  {article.title}
-                </h3>
-                <p className="mt-2 flex-1 text-sm leading-relaxed text-muted">
-                  {article.excerpt}
-                </p>
-                <p className="mt-4 text-xs text-muted">
-                  {formatDate(article.createdAt)}
-                </p>
-              </Link>
+              <TiltCard className="h-full rounded-3xl border border-line bg-surface shadow-sm">
+                <Link
+                  href={`/blog/${article.slug}`}
+                  className="group flex h-full flex-col p-6"
+                >
+                  <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-brand-soft px-3 py-1 text-xs font-semibold text-brand-strong">
+                    <BookOpenCheck className="h-3.5 w-3.5" />
+                    Edukasi
+                  </span>
+                  <h3 className="mt-4 font-[family-name:var(--font-display)] text-lg font-semibold leading-snug transition-colors group-hover:text-brand-strong">
+                    {article.title}
+                  </h3>
+                  <p className="mt-2 flex-1 text-sm leading-relaxed text-muted">
+                    {article.excerpt}
+                  </p>
+                  <p className="mt-4 text-xs font-medium text-muted">
+                    {formatDate(article.createdAt)}
+                  </p>
+                </Link>
+              </TiltCard>
             </Reveal>
           ))}
         </div>
       </section>
 
-      {/* ===== Testimoni ===== */}
-      <section className="border-y border-line bg-night text-emerald-50">
-        <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-24">
+      {/* ===== Testimoni (cerah) ===== */}
+      <section className="border-y border-line bg-gradient-to-br from-brand-soft via-sky to-gold-soft">
+        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-24">
           <Reveal>
             <div className="flex flex-wrap items-end justify-between gap-4">
-              <div>
-                <p className="text-sm font-semibold uppercase tracking-widest text-gold">
-                  Testimoni Adopter
-                </p>
-                <h2 className="mt-2 max-w-2xl font-[family-name:var(--font-display)] text-3xl font-semibold tracking-tight text-white sm:text-4xl">
-                  Dipercaya keluarga glider di seluruh Indonesia
-                </h2>
-              </div>
+              <SectionHeading
+                eyebrow="Testimoni Adopter"
+                title="Dipercaya keluarga glider di seluruh Indonesia"
+              />
               <Link
                 href="/testimoni"
-                className="group inline-flex items-center gap-2 text-sm font-semibold text-gold transition-colors hover:text-white"
+                className="group inline-flex items-center gap-2 text-sm font-semibold text-brand transition-colors hover:text-brand-strong"
               >
                 Semua testimoni
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -371,22 +365,20 @@ export default async function HomePage() {
           <div className="mt-10 grid gap-5 md:grid-cols-3">
             {testimonials.map((t, i) => (
               <Reveal key={t.id} delay={i * 120}>
-                <figure className="h-full rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur">
+                <TiltCard className="h-full rounded-3xl border border-white/60 bg-surface/90 p-6 shadow-sm backdrop-blur">
                   <div className="flex gap-1 text-gold">
                     {Array.from({ length: t.rating }).map((_, star) => (
                       <Star key={star} className="h-4 w-4 fill-current" />
                     ))}
                   </div>
-                  <blockquote className="mt-4 text-sm leading-relaxed text-emerald-100/80">
+                  <blockquote className="mt-4 text-sm leading-relaxed text-foreground/85">
                     “{t.quote}”
                   </blockquote>
-                  <figcaption className="mt-4 text-sm font-semibold text-white">
+                  <figcaption className="mt-4 text-sm font-semibold">
                     {t.name}
-                    <span className="ml-2 font-normal text-emerald-100/50">
-                      {t.city}
-                    </span>
+                    <span className="ml-2 font-normal text-muted">{t.city}</span>
                   </figcaption>
-                </figure>
+                </TiltCard>
               </Reveal>
             ))}
           </div>
@@ -394,22 +386,15 @@ export default async function HomePage() {
       </section>
 
       {/* ===== CTA akhir ===== */}
-      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-24">
+      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-24">
         <Reveal>
-          <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-brand to-brand-strong px-6 py-14 text-center text-white sm:px-12 md:py-20">
-            <div className="pointer-events-none absolute -left-10 -top-10 h-48 w-48 rounded-full bg-white/10 blur-2xl" />
-            <div className="pointer-events-none absolute -bottom-16 -right-10 h-64 w-64 rounded-full bg-gold/20 blur-3xl" />
-            <div className="animate-float-slow absolute -top-4 right-8 hidden md:block">
-              <MascotDisplay
-                mascotUrl={settings.mascotUrl}
-                className="h-28 w-28 opacity-90"
-                animated={false}
-              />
-            </div>
+          <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-brand via-brand to-brand-strong px-6 py-14 text-center text-white shadow-2xl shadow-brand/30 sm:px-12 md:py-20">
+            <div className="pointer-events-none absolute -left-10 -top-10 h-48 w-48 rounded-full bg-white/15 blur-2xl" />
+            <div className="pointer-events-none absolute -bottom-16 -right-10 h-64 w-64 rounded-full bg-gold/25 blur-3xl" />
             <h2 className="relative mx-auto max-w-2xl font-[family-name:var(--font-display)] text-3xl font-semibold tracking-tight sm:text-4xl">
               Siap menyambut anggota keluarga baru?
             </h2>
-            <p className="relative mx-auto mt-4 max-w-xl text-emerald-50/85">
+            <p className="relative mx-auto mt-4 max-w-xl text-blue-50">
               Konsultasi gratis dulu — kami bantu menilai kesiapan Anda dan
               memilih glider yang paling cocok, tanpa tekanan untuk membeli.
             </p>
@@ -428,7 +413,7 @@ export default async function HomePage() {
                 )}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-full border border-white/40 px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-white/10"
+                className="inline-flex items-center gap-2 rounded-full border border-white/50 px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-white/10"
               >
                 <MessageCircle className="h-4 w-4" />
                 Chat WhatsApp

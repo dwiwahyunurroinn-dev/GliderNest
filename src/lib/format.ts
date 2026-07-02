@@ -36,7 +36,7 @@ export function morphGradient(morph: string): [string, string] {
     platinum: ["#eef1f2", "#a8b4b8"],
     cremeino: ["#f9efe1", "#dfba90"],
   };
-  return palettes[morph.toLowerCase()] ?? ["#e4f3e9", "#8fbfa4"];
+  return palettes[morph.toLowerCase()] ?? ["#e3edff", "#93b4f5"];
 }
 
 export const gliderStatusLabel: Record<string, string> = {

@@ -1,17 +1,19 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f6faf7;
-  --foreground: #142319;
+  /* Palet cerah — biru profesional modern, tanpa blok warna gelap */
+  --background: #f5f8ff;
+  --foreground: #17233b; /* teks navy pekat = kontras tinggi & jelas */
   --surface: #ffffff;
-  --muted: #587263;
-  --line: #dfeae2;
-  --brand: #1e7a4f;
-  --brand-strong: #145c3a;
-  --brand-soft: #e5f4ea;
-  --night: #0c1f15;
-  --gold: #c8a24e;
-  --gold-soft: #f7efdd;
+  --muted: #4c5e7c;
+  --line: #dde6f5;
+  --brand: #2563eb;
+  --brand-strong: #1d4ed8;
+  --brand-soft: #e3edff;
+  --sky: #eef5ff;
+  --gold: #f59e0b;
+  --gold-soft: #fff3da;
+  --pink: #ffd9e0;
 }
 
 @theme inline {
@@ -23,7 +25,7 @@
   --color-brand: var(--brand);
   --color-brand-strong: var(--brand-strong);
   --color-brand-soft: var(--brand-soft);
-  --color-night: var(--night);
+  --color-sky: var(--sky);
   --color-gold: var(--gold);
   --color-gold-soft: var(--gold-soft);
   --font-sans: var(--font-jakarta);
@@ -41,65 +43,150 @@ body {
   color: var(--brand-strong);
 }
 
-/* ---------- Animasi ---------- */
+/* ---------- Teks gradien khas modern ---------- */
+.text-gradient {
+  background: linear-gradient(100deg, var(--brand) 10%, #7c3aed 55%, var(--gold) 95%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
 
+/* ---------- Kartu 3D interaktif (digerakkan TiltCard) ---------- */
+.tilt-card {
+  transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg))
+    translateZ(0);
+  transition: transform 0.18s ease-out, box-shadow 0.3s ease;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.tilt-card:hover {
+  box-shadow:
+    0 24px 48px -16px rgba(37, 99, 235, 0.25),
+    0 8px 20px -8px rgba(23, 35, 59, 0.12);
+}
+.tilt-glare {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: radial-gradient(
+    360px circle at var(--gx, 50%) var(--gy, 50%),
+    rgba(255, 255, 255, 0.55),
+    transparent 65%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.tilt-card:hover .tilt-glare {
+  opacity: 1;
+}
+
+/* ---------- Animasi umum ---------- */
 @keyframes float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-14px); }
 }
-
 @keyframes float-slow {
   0%, 100% { transform: translateY(0) rotate(0deg); }
   50% { transform: translateY(-8px) rotate(2deg); }
 }
-
-@keyframes blink {
-  0%, 90%, 100% { transform: scaleY(1); }
-  93%, 96% { transform: scaleY(0.08); }
-}
-
-@keyframes tail-sway {
-  0%, 100% { transform: rotate(0deg); }
-  50% { transform: rotate(6deg); }
-}
-
 @keyframes marquee {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
 }
-
 @keyframes shimmer {
-  0%, 100% { opacity: 0.5; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.06); }
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.07); }
+}
+@keyframes pop-in {
+  from { opacity: 0; transform: scale(0.92) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 .animate-float { animation: float 6s ease-in-out infinite; }
 .animate-float-slow { animation: float-slow 8s ease-in-out infinite; }
 .animate-shimmer { animation: shimmer 5s ease-in-out infinite; }
+.animate-pop-in { animation: pop-in 0.5s ease-out both; }
 
-.mascot-eye {
+.marquee-track { animation: marquee 40s linear infinite; }
+.marquee-track:hover { animation-play-state: paused; }
+
+/* ---------- Maskot: terbang meluncur ala sugar glider ---------- */
+/* Jalur terbang: melengkung turun-naik melintasi hero, dengan banking 3D */
+@keyframes glide-flight {
+  0%   { transform: translate3d(-16%, -8%, 0) rotateZ(-10deg) rotateY(8deg) scale(0.92); }
+  22%  { transform: translate3d(6%, 7%, 40px) rotateZ(4deg) rotateY(-4deg) scale(1.02); }
+  45%  { transform: translate3d(15%, -3%, 60px) rotateZ(-3deg) rotateY(-10deg) scale(1.06); }
+  60%  { transform: translate3d(4%, 9%, 30px) rotateZ(6deg) rotateY(2deg) scale(1); }
+  80%  { transform: translate3d(-10%, 2%, 10px) rotateZ(-6deg) rotateY(9deg) scale(0.95); }
+  100% { transform: translate3d(-16%, -8%, 0) rotateZ(-10deg) rotateY(8deg) scale(0.92); }
+}
+/* Membran patagium bergetar tertiup angin */
+@keyframes membrane-ripple {
+  0%, 100% { transform: scale(1, 1); }
+  50% { transform: scale(1.035, 0.96); }
+}
+/* Ekor mengayun sebagai kemudi */
+@keyframes tail-steer {
+  0%, 100% { transform: rotate(-4deg); }
+  50% { transform: rotate(9deg); }
+}
+/* Kaki/lengan menyesuaikan angin */
+@keyframes limb-adjust {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(3deg); }
+}
+/* Kedipan mata alami */
+@keyframes blink {
+  0%, 91%, 100% { transform: scaleY(1); }
+  93.5%, 96% { transform: scaleY(0.06); }
+}
+/* Bayangan di bawah maskot mengikuti ketinggian terbang */
+@keyframes glide-shadow {
+  0%   { transform: translateX(-16%) scale(0.9); opacity: 0.18; }
+  22%  { transform: translateX(6%) scale(1.05); opacity: 0.3; }
+  45%  { transform: translateX(15%) scale(1.1); opacity: 0.34; }
+  60%  { transform: translateX(4%) scale(1); opacity: 0.28; }
+  80%  { transform: translateX(-10%) scale(0.93); opacity: 0.2; }
+  100% { transform: translateX(-16%) scale(0.9); opacity: 0.18; }
+}
+
+.glider-flight {
+  animation: glide-flight 14s ease-in-out infinite;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.glider-shadow {
+  animation: glide-shadow 14s ease-in-out infinite;
+}
+.glider-membrane {
   transform-origin: center;
   transform-box: fill-box;
-  animation: blink 5.5s ease-in-out infinite;
+  animation: membrane-ripple 1.8s ease-in-out infinite;
 }
-
-.mascot-tail {
-  transform-origin: 30% 20%;
+.glider-tail {
+  transform-origin: 20% 15%;
   transform-box: fill-box;
-  animation: tail-sway 4s ease-in-out infinite;
+  animation: tail-steer 3.2s ease-in-out infinite;
 }
-
-.marquee-track {
-  animation: marquee 40s linear infinite;
+.glider-limb {
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: limb-adjust 2.4s ease-in-out infinite;
 }
-
-.marquee-track:hover {
-  animation-play-state: paused;
+.glider-eye {
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: blink 6s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-float, .animate-float-slow, .animate-shimmer,
-  .mascot-eye, .mascot-tail, .marquee-track {
+  .animate-float, .animate-float-slow, .animate-shimmer, .animate-pop-in,
+  .marquee-track, .glider-flight, .glider-shadow, .glider-membrane,
+  .glider-tail, .glider-limb, .glider-eye {
     animation: none;
+  }
+  .tilt-card {
+    transform: none !important;
   }
 }

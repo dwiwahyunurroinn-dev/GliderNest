@@ -272,11 +272,11 @@ export default async function OrderDetailPage({
         )}
       </div>
 
-      <div className="mt-6 rounded-[2rem] bg-night p-6 text-center text-emerald-50 sm:p-8">
-        <p className="font-semibold text-white">
+      <div className="mt-6 rounded-[2rem] bg-gradient-to-br from-brand to-brand-strong p-6 text-center text-white shadow-xl shadow-brand/25 sm:p-8">
+        <p className="font-semibold">
           Langkah terakhir: konfirmasi via WhatsApp
         </p>
-        <p className="mx-auto mt-2 max-w-md text-sm text-emerald-100/70">
+        <p className="mx-auto mt-2 max-w-md text-sm text-blue-50">
           {order.paymentMethod === "cod"
             ? "Sebutkan kode pesanan "
             : order.paymentMethod === "rekber"

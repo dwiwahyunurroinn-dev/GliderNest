@@ -157,8 +157,8 @@ export default async function HowToOrderPage() {
       </Reveal>
 
       <Reveal>
-        <div className="mt-14 flex flex-col items-center gap-4 rounded-[2rem] bg-night p-10 text-center text-emerald-50">
-          <h2 className="font-[family-name:var(--font-display)] text-2xl font-semibold text-white">
+        <div className="mt-14 flex flex-col items-center gap-4 rounded-[2rem] bg-gradient-to-br from-brand to-brand-strong p-10 text-center text-white shadow-xl shadow-brand/25">
+          <h2 className="font-[family-name:var(--font-display)] text-2xl font-semibold">
             Sudah siap? Yuk mulai!
           </h2>
           <div className="flex flex-wrap justify-center gap-3">
@@ -174,7 +174,7 @@ export default async function HowToOrderPage() {
               message={`Halo ${settings.siteName}, saya ingin dibantu memesan sugar glider.`}
               label="Tanya Dulu via WA"
               variant="outline"
-              className="border-white/30 bg-transparent text-white hover:border-gold hover:text-gold"
+              className="border-white/40 bg-transparent text-white hover:border-white hover:bg-white/10 hover:text-white"
             />
           </div>
         </div>

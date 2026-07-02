@@ -50,7 +50,7 @@ export default async function BlogPage() {
                     className="h-44 w-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 ) : (
-                  <div className="flex h-44 items-center justify-center bg-gradient-to-br from-brand-soft to-emerald-100">
+                  <div className="flex h-44 items-center justify-center bg-gradient-to-br from-brand-soft to-sky">
                     <BookOpenCheck className="h-10 w-10 text-brand/50" />
                   </div>
                 )}
