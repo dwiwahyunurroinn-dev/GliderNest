@@ -44,7 +44,7 @@ export default async function AdminBackgroundPage() {
         </div>
         <div>
           <label htmlFor="image" className={labelCls}>File foto</label>
-          <ImageInput id="image" name="image" required previewHeight="h-56" />
+          <ImageInput id="image" name="image" required aspect={16 / 9} previewHeight="h-56" />
         </div>
         <label className="flex items-center gap-2.5 text-sm font-medium">
           <input type="checkbox" name="active" defaultChecked className="h-4 w-4 accent-[var(--brand)]" />

@@ -74,7 +74,7 @@ export default async function AdminSettingsPage({
                   (tampil di header & footer; disarankan persegi/bulat)
                 </span>
               </label>
-              <ImageInput id="logoImage" name="logoImage" previewHeight="h-32" />
+              <ImageInput id="logoImage" name="logoImage" aspect={1} previewHeight="h-32" />
               {settings.logoUrl ? (
                 <div className="mt-3 flex items-center gap-4">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -102,7 +102,7 @@ export default async function AdminSettingsPage({
                   gambar disimpan untuk kebutuhan mendatang)
                 </span>
               </label>
-              <ImageInput id="mascotImage" name="mascotImage" previewHeight="h-32" />
+              <ImageInput id="mascotImage" name="mascotImage" aspect={1} previewHeight="h-32" />
               {settings.mascotUrl ? (
                 <div className="mt-3 flex items-center gap-4">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -184,7 +184,7 @@ export default async function AdminSettingsPage({
                   : "(unggah gambar kode QR dari penyedia QRIS Anda)"}
               </span>
             </label>
-            <ImageInput id="qrisImage" name="qrisImage" previewHeight="h-56" />
+            <ImageInput id="qrisImage" name="qrisImage" aspect={1} previewHeight="h-56" />
             {settings.qrisImageUrl && (
               // eslint-disable-next-line @next/next/no-img-element
               <img

@@ -139,7 +139,7 @@ export function GliderForm({
             {glider?.imageUrl ? "(kosongkan jika tidak ingin mengganti)" : "(opsional)"}
           </span>
         </label>
-        <ImageInput id="image" name="image" />
+        <ImageInput id="image" name="image" aspect={4 / 3} />
         {glider?.imageUrl && (
           <div className="mt-3 flex items-center gap-3">
             {/* eslint-disable-next-line @next/next/no-img-element */}

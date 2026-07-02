@@ -38,7 +38,7 @@ export default async function AdminGalleryPage() {
         </div>
         <div>
           <label htmlFor="image" className={labelCls}>File foto</label>
-          <ImageInput id="image" name="image" required />
+          <ImageInput id="image" name="image" required aspect={3 / 2} />
         </div>
         <button type="submit" className={`${btnPrimary} justify-center`}>
           <ImagePlus className="h-4 w-4" />

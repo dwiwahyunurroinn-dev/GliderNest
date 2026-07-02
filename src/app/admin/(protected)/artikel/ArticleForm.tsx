@@ -57,7 +57,7 @@ export function ArticleForm({
             {article?.coverUrl ? "(kosongkan jika tidak ingin mengganti)" : "(opsional)"}
           </span>
         </label>
-        <ImageInput id="cover" name="cover" />
+        <ImageInput id="cover" name="cover" aspect={16 / 9} />
         {article?.coverUrl && (
           <div className="mt-3 flex items-center gap-3">
             {/* eslint-disable-next-line @next/next/no-img-element */}
