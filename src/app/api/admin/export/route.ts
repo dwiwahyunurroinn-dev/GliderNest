@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/db";
 import { getSession } from "@/lib/auth";
-import { orderStatusLabel, paymentMethodLabel } from "@/lib/format";
+import { expenseCategoryLabel, orderStatusLabel, paymentMethodLabel } from "@/lib/format";
 import { resolvePeriod, type PeriodKey } from "@/lib/reports";
 
 /**
@@ -38,7 +38,26 @@ export async function GET(request: Request) {
   let rows: string[];
   let filename: string;
 
-  if (jenis === "stok") {
+  if (jenis === "pengeluaran") {
+    const expenses = await prisma.expense.findMany({
+      where: start ? { date: { gte: start } } : {},
+      orderBy: { date: "desc" },
+    });
+    rows = [
+      ["Tanggal", "Kategori", "Keterangan", "Jumlah (Rp)"].map(esc).join(sep),
+      ...expenses.map((e) =>
+        [
+          tgl(e.date),
+          expenseCategoryLabel[e.category] ?? e.category,
+          e.description,
+          e.amount,
+        ]
+          .map(esc)
+          .join(sep)
+      ),
+    ];
+    filename = `pengeluaran-${periode}`;
+  } else if (jenis === "stok") {
     const logs = await prisma.stockLog.findMany({
       where: start ? { createdAt: { gte: start } } : {},
       orderBy: { createdAt: "desc" },

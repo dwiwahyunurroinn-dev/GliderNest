@@ -15,6 +15,7 @@ import {
   CalendarCheck,
   Dna,
   History,
+  ReceiptText,
 } from "lucide-react";
 import { credentialWarnings, requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/db";
@@ -30,6 +31,7 @@ const menu = [
   { href: "/admin/indukan", icon: Dna, label: "Indukan & Silsilah" },
   { href: "/admin/pesanan", icon: PackageSearch, label: "Pesanan" },
   { href: "/admin/laporan", icon: BarChart3, label: "Laporan" },
+  { href: "/admin/pengeluaran", icon: ReceiptText, label: "Pengeluaran" },
   { href: "/admin/aktivitas", icon: History, label: "Aktivitas" },
   { href: "/admin/artikel", icon: BookOpenText, label: "Artikel Blog" },
   { href: "/admin/galeri", icon: Images, label: "Galeri" },

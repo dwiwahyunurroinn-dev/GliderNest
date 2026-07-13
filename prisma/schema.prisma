@@ -51,6 +51,16 @@ model Parent {
   createdAt DateTime @default(now())
 }
 
+// Pengeluaran usaha — dasar perhitungan laba bersih di Laporan.
+model Expense {
+  id          String   @id @default(cuid())
+  date        DateTime // tanggal pengeluaran (dipilih admin)
+  category    String // pakan | kandang | kesehatan | pengiriman | operasional | pemasaran | lainnya
+  description String
+  amount      Int
+  createdAt   DateTime @default(now())
+}
+
 // Jejak aktivitas admin & sistem — untuk audit harian.
 model ActivityLog {
   id        String   @id @default(cuid())

@@ -69,6 +69,26 @@ export function followupCutoff(): Date {
   return new Date(Date.now() - 24 * 60 * 60 * 1000);
 }
 
+export const expenseCategories = [
+  "pakan",
+  "kandang",
+  "kesehatan",
+  "pengiriman",
+  "operasional",
+  "pemasaran",
+  "lainnya",
+] as const;
+
+export const expenseCategoryLabel: Record<string, string> = {
+  pakan: "Pakan & Nutrisi",
+  kandang: "Kandang & Peralatan",
+  kesehatan: "Kesehatan & Obat",
+  pengiriman: "Pengiriman & Kurir",
+  operasional: "Listrik & Operasional",
+  pemasaran: "Pemasaran & Promosi",
+  lainnya: "Lainnya",
+};
+
 export const paymentMethodLabel: Record<string, string> = {
   qris: "QRIS",
   transfer: "Transfer Bank / M-Banking",

@@ -45,6 +45,8 @@ export interface PeriodStats {
   revenue: number;
   newOrders: number;
   stockIn: number;
+  expenses: number;
+  profit: number;
 }
 
 async function statsBetween(start: Date | null, end: Date | null): Promise<PeriodStats> {
@@ -53,7 +55,12 @@ async function statsBetween(start: Date | null, end: Date | null): Promise<Perio
       ? { [field]: { ...(start ? { gte: start } : {}), ...(end ? { lt: end } : {}) } }
       : {};
 
-  const [sold, newOrders, stockIn] = await Promise.all([
+  const dateRange =
+    start || end
+      ? { date: { ...(start ? { gte: start } : {}), ...(end ? { lt: end } : {}) } }
+      : {};
+
+  const [sold, newOrders, stockIn, spent] = await Promise.all([
     prisma.order.aggregate({
       where: { status: "selesai", ...range("updatedAt") },
       _count: true,
@@ -64,14 +71,39 @@ async function statsBetween(start: Date | null, end: Date | null): Promise<Perio
       where: { type: "masuk", ...range("createdAt") },
       _sum: { change: true },
     }),
+    prisma.expense.aggregate({
+      where: dateRange,
+      _sum: { amount: true },
+    }),
   ]);
 
+  const revenue = sold._sum.amount ?? 0;
+  const expenses = spent._sum.amount ?? 0;
   return {
     soldCount: sold._count,
-    revenue: sold._sum.amount ?? 0,
+    revenue,
     newOrders,
     stockIn: stockIn._sum.change ?? 0,
+    expenses,
+    profit: revenue - expenses,
   };
+}
+
+/** Rincian pengeluaran per kategori dalam satu periode. */
+export async function getExpenseBreakdown(
+  key: PeriodKey
+): Promise<{ category: string; total: number }[]> {
+  const { start } = resolvePeriod(key);
+  const grouped = await prisma.expense.groupBy({
+    by: ["category"],
+    where: start ? { date: { gte: start } } : {},
+    _sum: { amount: true },
+    orderBy: { _sum: { amount: "desc" } },
+  });
+  return grouped.map((g) => ({
+    category: g.category,
+    total: g._sum.amount ?? 0,
+  }));
 }
 
 /** Statistik periode terpilih + pembanding periode sebelumnya (untuk % pertumbuhan). */

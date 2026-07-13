@@ -7,9 +7,12 @@ import {
   ArrowUpRight,
   ArrowDownRight,
   FileSpreadsheet,
+  ReceiptText,
+  PiggyBank,
 } from "lucide-react";
-import { formatPrice } from "@/lib/format";
+import { expenseCategoryLabel, formatPrice } from "@/lib/format";
 import {
+  getExpenseBreakdown,
   getMonthlyRevenue,
   getPeriodReport,
   growthPercent,
@@ -50,9 +53,10 @@ export default async function AdminReportPage({
     ? (periode as PeriodKey)
     : "30";
 
-  const [{ current, previous }, monthly] = await Promise.all([
+  const [{ current, previous }, monthly, breakdown] = await Promise.all([
     getPeriodReport(key),
     getMonthlyRevenue(6),
+    getExpenseBreakdown(key),
   ]);
 
   const cards = [
@@ -129,6 +133,88 @@ export default async function AdminReportPage({
         ))}
       </div>
 
+      {/* Keuangan: pengeluaran & laba bersih */}
+      <div className="mt-4 grid gap-4 sm:grid-cols-2">
+        <div className="rounded-2xl border border-line bg-surface p-5 shadow-sm">
+          <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-red-500/10 text-red-500">
+            <ReceiptText className="h-5 w-5" />
+          </span>
+          <p className="mt-4 text-2xl font-bold leading-tight text-red-500">
+            −{formatPrice(current.expenses)}
+          </p>
+          <p className="mt-0.5 text-sm font-semibold">Pengeluaran</p>
+          <p className="mt-1.5">
+            <Growth
+              value={previous ? growthPercent(current.expenses, previous.expenses) : null}
+            />
+          </p>
+          <Link
+            href="/admin/pengeluaran"
+            className="mt-2 inline-block text-xs font-semibold text-brand hover:text-brand-strong"
+          >
+            Kelola pengeluaran →
+          </Link>
+        </div>
+        <div className="rounded-2xl border border-line bg-surface p-5 shadow-sm">
+          <span
+            className={`flex h-11 w-11 items-center justify-center rounded-xl ${
+              current.profit >= 0
+                ? "bg-emerald-500/15 text-emerald-600"
+                : "bg-red-500/10 text-red-500"
+            }`}
+          >
+            <PiggyBank className="h-5 w-5" />
+          </span>
+          <p
+            className={`mt-4 text-2xl font-bold leading-tight ${
+              current.profit >= 0 ? "text-emerald-600" : "text-red-500"
+            }`}
+          >
+            {formatPrice(current.profit)}
+          </p>
+          <p className="mt-0.5 text-sm font-semibold">Laba Bersih</p>
+          <p className="text-xs text-muted">uang masuk − pengeluaran</p>
+          <p className="mt-1.5">
+            <Growth
+              value={previous ? growthPercent(current.profit, previous.profit) : null}
+            />
+          </p>
+        </div>
+      </div>
+
+      {/* Rincian pengeluaran per kategori */}
+      {breakdown.length > 0 && (
+        <div className="mt-4 rounded-2xl border border-line bg-surface p-6 shadow-sm">
+          <h2 className="font-semibold">Pengeluaran per Kategori</h2>
+          <ul className="mt-4 space-y-2.5">
+            {breakdown.map((b) => {
+              const pct = current.expenses
+                ? Math.round((b.total / current.expenses) * 100)
+                : 0;
+              return (
+                <li key={b.category}>
+                  <div className="flex items-baseline justify-between gap-3 text-sm">
+                    <span className="font-semibold">
+                      {expenseCategoryLabel[b.category] ?? b.category}
+                    </span>
+                    <span className="font-bold">
+                      {formatPrice(b.total)}{" "}
+                      <span className="font-normal text-muted">({pct}%)</span>
+                    </span>
+                  </div>
+                  <div className="mt-1 h-2 overflow-hidden rounded-full bg-brand-soft">
+                    <div
+                      className="h-full rounded-full bg-brand"
+                      style={{ width: `${pct}%` }}
+                    />
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
+
       {/* Grafik bulanan */}
       <div className="mt-6 rounded-2xl border border-line bg-surface p-6 shadow-sm">
         <h2 className="font-semibold">Tren Pendapatan 6 Bulan Terakhir</h2>
@@ -166,6 +252,13 @@ export default async function AdminReportPage({
           >
             <FileSpreadsheet className="h-4 w-4" />
             Ekspor Log Stok (CSV)
+          </a>
+          <a
+            href={`/api/admin/export?jenis=pengeluaran&periode=${key}`}
+            className="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-5 py-2.5 text-sm font-semibold transition-colors hover:border-brand hover:text-brand-strong"
+          >
+            <FileSpreadsheet className="h-4 w-4" />
+            Ekspor Pengeluaran (CSV)
           </a>
         </div>
       </div>
