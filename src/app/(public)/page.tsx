@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { prisma } from "@/lib/db";
 import { getActiveBackgroundUrl, getSettings, waLink } from "@/lib/settings";
-import { formatDate } from "@/lib/format";
+import { currentTime, formatDate } from "@/lib/format";
 import { GliderCard } from "@/components/GliderCard";
 import { Reveal } from "@/components/Reveal";
 import { SectionHeading } from "@/components/SectionHeading";
@@ -83,8 +83,8 @@ export default async function HomePage() {
         take: 3,
       }),
       prisma.article.findMany({
-        where: { published: true },
-        orderBy: { createdAt: "desc" },
+        where: { published: true, publishAt: { lte: currentTime() } },
+        orderBy: { publishAt: "desc" },
         take: 3,
       }),
       prisma.testimonial.findMany({

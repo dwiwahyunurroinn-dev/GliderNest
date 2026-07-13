@@ -32,7 +32,10 @@ export default async function GliderDetailPage({
 }) {
   const { slug } = await params;
   const [glider, settings] = await Promise.all([
-    prisma.glider.findUnique({ where: { slug } }),
+    prisma.glider.findUnique({
+      where: { slug },
+      include: { sire: true, dam: true },
+    }),
     getSettings(),
   ]);
   if (!glider) notFound();
@@ -124,6 +127,24 @@ export default async function GliderDetailPage({
                 {glider.stock > 0 ? `${glider.stock} ekor` : "Habis"}
               </dd>
             </div>
+            {glider.sire && (
+              <div>
+                <dt className="text-muted">Indukan jantan</dt>
+                <dd className="mt-0.5 font-semibold">
+                  ♂ {glider.sire.name}{" "}
+                  <span className="font-normal text-muted">({glider.sire.morph})</span>
+                </dd>
+              </div>
+            )}
+            {glider.dam && (
+              <div>
+                <dt className="text-muted">Indukan betina</dt>
+                <dd className="mt-0.5 font-semibold">
+                  ♀ {glider.dam.name}{" "}
+                  <span className="font-normal text-muted">({glider.dam.morph})</span>
+                </dd>
+              </div>
+            )}
             <div className="col-span-2">
               <dt className="text-muted">Silsilah</dt>
               <dd className="mt-0.5 font-semibold">{glider.lineage}</dd>

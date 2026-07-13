@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth";
+import { logActivity } from "@/lib/activity";
 import { saveUpload } from "@/lib/upload";
 import { slugify } from "@/lib/format";
 
@@ -20,6 +21,8 @@ function parseGliderForm(formData: FormData) {
     lineage: String(formData.get("lineage") ?? "").trim(),
     traits: String(formData.get("traits") ?? "").trim(),
     featured: formData.get("featured") === "on",
+    sireId: String(formData.get("sireId") ?? "") || null,
+    damId: String(formData.get("damId") ?? "") || null,
   };
 }
 
@@ -48,6 +51,7 @@ export async function createGlider(formData: FormData): Promise<void> {
       },
     });
   }
+  await logActivity("Glider ditambahkan", `${data.name} (${data.morph}) — stok ${data.stock}`);
   revalidate();
   redirect("/admin/gliders");
 }
@@ -74,6 +78,7 @@ export async function updateGlider(id: string, formData: FormData): Promise<void
       },
     });
   }
+  await logActivity("Glider diubah", `${data.name} (${data.morph})`);
   revalidate();
   redirect("/admin/gliders");
 }
@@ -102,11 +107,13 @@ export async function adjustStock(id: string, delta: number): Promise<void> {
       note: delta > 0 ? "Penambahan stok manual" : "Pengurangan stok manual",
     },
   });
+  await logActivity("Stok disesuaikan", `${glider.name}: ${glider.stock} → ${newStock}`);
   revalidate();
 }
 
 export async function deleteGlider(id: string): Promise<void> {
   await requireAdmin();
-  await prisma.glider.delete({ where: { id } });
+  const g = await prisma.glider.delete({ where: { id } });
+  await logActivity("Glider dihapus", `${g.name} (${g.morph})`);
   revalidate();
 }

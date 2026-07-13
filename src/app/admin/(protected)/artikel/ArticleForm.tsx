@@ -1,4 +1,5 @@
 import type { Article } from "@/generated/prisma/client";
+import { toDatetimeLocal } from "@/lib/format";
 import { inputCls, labelCls, btnPrimary } from "@/components/admin/ui";
 import { ImageInput } from "@/components/admin/ImageInput";
 
@@ -71,15 +72,33 @@ export function ArticleForm({
         )}
       </div>
 
-      <label className="flex items-center gap-2.5 text-sm font-medium">
-        <input
-          type="checkbox"
-          name="published"
-          defaultChecked={article ? article.published : true}
-          className="h-4 w-4 accent-[var(--brand)]"
-        />
-        Terbitkan (tampil di website)
-      </label>
+      <div className="grid gap-5 sm:grid-cols-2">
+        <label className="flex items-center gap-2.5 text-sm font-medium">
+          <input
+            type="checkbox"
+            name="published"
+            defaultChecked={article ? article.published : true}
+            className="h-4 w-4 accent-[var(--brand)]"
+          />
+          Terbitkan (hapus centang = simpan sebagai draf)
+        </label>
+        <div>
+          <label htmlFor="publishAt" className={labelCls}>
+            Jadwal terbit{" "}
+            <span className="font-normal text-muted">
+              (isi waktu di masa depan untuk menjadwalkan; artikel tampil
+              otomatis saat waktunya tiba)
+            </span>
+          </label>
+          <input
+            id="publishAt"
+            name="publishAt"
+            type="datetime-local"
+            defaultValue={article ? toDatetimeLocal(article.publishAt) : undefined}
+            className={inputCls}
+          />
+        </div>
+      </div>
 
       <button type="submit" className={btnPrimary}>
         {article ? "Simpan Perubahan" : "Terbitkan Artikel"}

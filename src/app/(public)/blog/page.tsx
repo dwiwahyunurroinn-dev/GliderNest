@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { BookOpenCheck, ArrowRight } from "lucide-react";
 import { prisma } from "@/lib/db";
-import { formatDate } from "@/lib/format";
+import { currentTime, formatDate } from "@/lib/format";
 import { Reveal } from "@/components/Reveal";
 import { SectionHeading } from "@/components/SectionHeading";
 
@@ -16,8 +16,8 @@ export const metadata: Metadata = {
 
 export default async function BlogPage() {
   const articles = await prisma.article.findMany({
-    where: { published: true },
-    orderBy: { createdAt: "desc" },
+    where: { published: true, publishAt: { lte: currentTime() } },
+    orderBy: { publishAt: "desc" },
   });
 
   return (

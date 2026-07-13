@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { prisma } from "@/lib/db";
-import { formatDate } from "@/lib/format";
+import { currentTime, formatDate } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 
@@ -25,11 +25,11 @@ export default async function ArticlePage({
 }) {
   const { slug } = await params;
   const article = await prisma.article.findUnique({ where: { slug } });
-  if (!article || !article.published) notFound();
+  if (!article || !article.published || article.publishAt > currentTime()) notFound();
 
   const others = await prisma.article.findMany({
-    where: { published: true, slug: { not: slug } },
-    orderBy: { createdAt: "desc" },
+    where: { published: true, publishAt: { lte: currentTime() }, slug: { not: slug } },
+    orderBy: { publishAt: "desc" },
     take: 2,
   });
 

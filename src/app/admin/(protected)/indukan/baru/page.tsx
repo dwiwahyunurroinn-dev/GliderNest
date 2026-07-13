@@ -1,26 +1,22 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { prisma } from "@/lib/db";
-import { GliderForm } from "../GliderForm";
-import { createGlider } from "../actions";
+import { ParentForm } from "../ParentForm";
+import { createParent } from "../actions";
 
-export const dynamic = "force-dynamic";
-
-export default async function NewGliderPage() {
-  const parents = await prisma.parent.findMany({ orderBy: { name: "asc" } });
+export default function NewParentPage() {
   return (
     <div>
       <Link
-        href="/admin/gliders"
+        href="/admin/indukan"
         className="inline-flex items-center gap-1.5 text-sm font-medium text-muted hover:text-brand-strong"
       >
         <ArrowLeft className="h-4 w-4" />
         Kembali
       </Link>
       <h1 className="mt-4 font-[family-name:var(--font-display)] text-2xl font-semibold">
-        Tambah Sugar Glider
+        Tambah Indukan
       </h1>
-      <GliderForm parents={parents} action={createGlider} />
+      <ParentForm action={createParent} />
     </div>
   );
 }

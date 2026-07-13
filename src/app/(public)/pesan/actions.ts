@@ -5,6 +5,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { rateLimit } from "@/lib/rate-limit";
+import { logActivity } from "@/lib/activity";
 
 function generateOrderCode(): string {
   // randomInt (kriptografis) — kode pesanan tidak bisa ditebak polanya
@@ -98,6 +99,8 @@ export async function createOrder(formData: FormData): Promise<void> {
       },
     });
   }
+
+  await logActivity("Pesanan baru masuk", `${order.code} — ${order.gliderName} oleh ${customerName}`);
 
   redirect(`/pesan/${order.code}`);
 }

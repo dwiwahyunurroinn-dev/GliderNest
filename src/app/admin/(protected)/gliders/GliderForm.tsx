@@ -1,14 +1,18 @@
-import type { Glider } from "@/generated/prisma/client";
+import type { Glider, Parent } from "@/generated/prisma/client";
 import { inputCls, labelCls, btnPrimary } from "@/components/admin/ui";
 import { ImageInput } from "@/components/admin/ImageInput";
 
 export function GliderForm({
   glider,
+  parents = [],
   action,
 }: {
   glider?: Glider;
+  parents?: Parent[];
   action: (formData: FormData) => Promise<void>;
 }) {
+  const sires = parents.filter((p) => p.sex === "jantan");
+  const dams = parents.filter((p) => p.sex === "betina");
   return (
     <form
       action={action}
@@ -108,6 +112,31 @@ export function GliderForm({
       </div>
 
       <div className="grid gap-5 sm:grid-cols-2">
+        <div>
+          <label htmlFor="sireId" className={labelCls}>
+            Indukan jantan (sire){" "}
+            <span className="font-normal text-muted">— kelola di menu Indukan</span>
+          </label>
+          <select id="sireId" name="sireId" defaultValue={glider?.sireId ?? ""} className={inputCls}>
+            <option value="">— tidak dicatat —</option>
+            {sires.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.name} ({p.morph})
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label htmlFor="damId" className={labelCls}>Indukan betina (dam)</label>
+          <select id="damId" name="damId" defaultValue={glider?.damId ?? ""} className={inputCls}>
+            <option value="">— tidak dicatat —</option>
+            {dams.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.name} ({p.morph})
+              </option>
+            ))}
+          </select>
+        </div>
         <div>
           <label htmlFor="lineage" className={labelCls}>Silsilah</label>
           <input

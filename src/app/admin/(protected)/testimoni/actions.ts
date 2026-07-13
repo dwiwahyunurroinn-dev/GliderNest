@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth";
+import { logActivity } from "@/lib/activity";
 
 function revalidate() {
   revalidatePath("/");
@@ -21,6 +22,7 @@ export async function createTestimonial(formData: FormData): Promise<void> {
   await prisma.testimonial.create({
     data: { name, city, quote, rating, published: true },
   });
+  await logActivity("Testimoni ditambahkan", `${name} (${city})`);
   revalidate();
 }
 
@@ -37,6 +39,7 @@ export async function toggleTestimonial(id: string): Promise<void> {
 
 export async function deleteTestimonial(id: string): Promise<void> {
   await requireAdmin();
-  await prisma.testimonial.delete({ where: { id } });
+  const t = await prisma.testimonial.delete({ where: { id } });
+  await logActivity("Testimoni dihapus", t.name);
   revalidate();
 }

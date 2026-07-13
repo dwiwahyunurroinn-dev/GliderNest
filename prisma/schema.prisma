@@ -28,8 +28,35 @@ model Glider {
   featured    Boolean    @default(false)
   orders      Order[]
   stockLogs   StockLog[]
+  // silsilah: indukan jantan (sire) & betina (dam)
+  sire        Parent?    @relation("Sire", fields: [sireId], references: [id], onDelete: SetNull)
+  sireId      String?
+  dam         Parent?    @relation("Dam", fields: [damId], references: [id], onDelete: SetNull)
+  damId       String?
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
+}
+
+// Indukan penangkaran — sumber silsilah joey.
+model Parent {
+  id        String   @id @default(cuid())
+  name      String
+  morph     String
+  sex       String // jantan | betina
+  birthYear Int      @default(0)
+  notes     String   @default("")
+  imageUrl  String   @default("")
+  sired     Glider[] @relation("Sire")
+  mothered  Glider[] @relation("Dam")
+  createdAt DateTime @default(now())
+}
+
+// Jejak aktivitas admin & sistem — untuk audit harian.
+model ActivityLog {
+  id        String   @id @default(cuid())
+  action    String
+  detail    String   @default("")
+  createdAt DateTime @default(now())
 }
 
 // Riwayat pergerakan stok — dasar laporan "stok masuk per periode".
@@ -61,6 +88,7 @@ model Article {
   content   String // paragraf dipisah baris kosong
   coverUrl  String   @default("")
   published Boolean  @default(true)
+  publishAt DateTime @default(now()) // artikel tampil publik setelah waktu ini
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

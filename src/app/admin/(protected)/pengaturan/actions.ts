@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { checkPassword, hashPassword, requireAdmin } from "@/lib/auth";
+import { logActivity } from "@/lib/activity";
 import { saveUpload } from "@/lib/upload";
 
 export async function updateSettings(formData: FormData): Promise<void> {
@@ -48,6 +49,7 @@ export async function updateSettings(formData: FormData): Promise<void> {
     create: { id: 1, ...data },
   });
 
+  await logActivity("Pengaturan website disimpan");
   revalidatePath("/", "layout");
   redirect("/admin/pengaturan?saved=1");
 }
@@ -76,6 +78,7 @@ export async function changeAdminPassword(formData: FormData): Promise<void> {
     create: { id: 1, adminPasswordHash: hashPassword(next) },
   });
 
+  await logActivity("Password admin diganti");
   revalidatePath("/admin", "layout");
   redirect("/admin/pengaturan?pw=ok#keamanan");
 }

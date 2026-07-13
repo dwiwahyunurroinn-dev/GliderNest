@@ -6,6 +6,7 @@ import {
   Inbox,
   ArrowUpRight,
   ArrowDownRight,
+  FileSpreadsheet,
 } from "lucide-react";
 import { formatPrice } from "@/lib/format";
 import {
@@ -141,6 +142,31 @@ export default async function AdminReportPage({
               v >= 1000000 ? `${(v / 1000000).toFixed(1)}jt` : v > 0 ? `${Math.round(v / 1000)}rb` : "0"
             }
           />
+        </div>
+      </div>
+
+      {/* Ekspor untuk pembukuan */}
+      <div className="mt-6 rounded-2xl border border-line bg-surface p-6 shadow-sm">
+        <h2 className="font-semibold">Ekspor untuk Pembukuan</h2>
+        <p className="mt-1 text-xs text-muted">
+          File CSV mengikuti periode terpilih ({periodLabels[key]}) — terbuka
+          langsung di Excel atau Google Sheets.
+        </p>
+        <div className="mt-4 flex flex-wrap gap-2">
+          <a
+            href={`/api/admin/export?jenis=pesanan&periode=${key}`}
+            className="inline-flex items-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-strong"
+          >
+            <FileSpreadsheet className="h-4 w-4" />
+            Ekspor Pesanan (CSV)
+          </a>
+          <a
+            href={`/api/admin/export?jenis=stok&periode=${key}`}
+            className="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-5 py-2.5 text-sm font-semibold transition-colors hover:border-brand hover:text-brand-strong"
+          >
+            <FileSpreadsheet className="h-4 w-4" />
+            Ekspor Log Stok (CSV)
+          </a>
         </div>
       </div>
 

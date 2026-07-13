@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth";
+import { logActivity } from "@/lib/activity";
 import { saveUpload } from "@/lib/upload";
 
 function revalidate() {
@@ -25,6 +26,7 @@ export async function createBackground(formData: FormData): Promise<void> {
   await prisma.background.create({
     data: { title, imageUrl, active: setActive },
   });
+  await logActivity("Background diunggah", title);
   revalidate();
 }
 
@@ -34,6 +36,8 @@ export async function setActiveBackground(id: string): Promise<void> {
     prisma.background.updateMany({ data: { active: false } }),
     prisma.background.update({ where: { id }, data: { active: true } }),
   ]);
+  const bg = await prisma.background.findUnique({ where: { id } });
+  await logActivity("Background diganti", bg?.title ?? "");
   revalidate();
 }
 

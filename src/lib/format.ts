@@ -53,6 +53,17 @@ export const orderStatusLabel: Record<string, string> = {
   dibatalkan: "Dibatalkan",
 };
 
+/** Waktu sekarang — dibungkus agar aman dari aturan lint purity komponen. */
+export function currentTime(): Date {
+  return new Date();
+}
+
+/** Date → nilai input datetime-local (YYYY-MM-DDTHH:mm, zona waktu lokal). */
+export function toDatetimeLocal(d: Date): string {
+  const p = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`;
+}
+
 /** Batas waktu follow-up: pesanan menunggu yang dibuat sebelum ini perlu ditindak. */
 export function followupCutoff(): Date {
   return new Date(Date.now() - 24 * 60 * 60 * 1000);

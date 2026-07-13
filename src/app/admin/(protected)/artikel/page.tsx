@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Plus, Pencil, Search } from "lucide-react";
 import { prisma } from "@/lib/db";
-import { formatDate } from "@/lib/format";
+import { currentTime, formatDate } from "@/lib/format";
 import { DeleteButton } from "@/components/admin/DeleteButton";
 import { btnPrimary, inputCls } from "@/components/admin/ui";
 import { deleteArticle } from "./actions";
@@ -66,11 +66,15 @@ export default async function AdminArticlesPage({
             <div className="min-w-0">
               <p className="font-semibold">{a.title}</p>
               <p className="mt-0.5 text-xs text-muted">
-                {formatDate(a.createdAt)} ·{" "}
-                {a.published ? (
-                  <span className="font-semibold text-brand">Terbit</span>
-                ) : (
+                {formatDate(a.publishAt)} ·{" "}
+                {!a.published ? (
                   <span className="font-semibold text-amber-600">Draf</span>
+                ) : a.publishAt > currentTime() ? (
+                  <span className="font-semibold text-sky-600">
+                    Terjadwal ⏱
+                  </span>
+                ) : (
+                  <span className="font-semibold text-brand">Tayang</span>
                 )}
               </p>
             </div>

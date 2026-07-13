@@ -28,7 +28,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const [gliders, articles] = await Promise.all([
       prisma.glider.findMany({ select: { slug: true } }),
       prisma.article.findMany({
-        where: { published: true },
+        where: { published: true, publishAt: { lte: new Date() } },
         select: { slug: true },
       }),
     ]);

@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth";
+import { logActivity } from "@/lib/activity";
 import { saveUpload } from "@/lib/upload";
 
 function revalidate() {
@@ -18,11 +19,13 @@ export async function createGalleryItem(formData: FormData): Promise<void> {
   if (!title || !imageUrl) return;
 
   await prisma.galleryItem.create({ data: { title, imageUrl } });
+  await logActivity("Foto galeri ditambahkan", title);
   revalidate();
 }
 
 export async function deleteGalleryItem(id: string): Promise<void> {
   await requireAdmin();
-  await prisma.galleryItem.delete({ where: { id } });
+  const g = await prisma.galleryItem.delete({ where: { id } });
+  await logActivity("Foto galeri dihapus", g.title);
   revalidate();
 }

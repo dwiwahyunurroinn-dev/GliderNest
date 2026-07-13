@@ -12,6 +12,9 @@ import {
   ExternalLink,
   Bell,
   BarChart3,
+  CalendarCheck,
+  Dna,
+  History,
 } from "lucide-react";
 import { credentialWarnings, requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/db";
@@ -22,9 +25,12 @@ import { logout } from "./actions";
 
 const menu = [
   { href: "/admin", icon: LayoutDashboard, label: "Dashboard" },
+  { href: "/admin/hari-ini", icon: CalendarCheck, label: "Hari Ini" },
   { href: "/admin/gliders", icon: PawPrint, label: "Sugar Glider & Stok" },
+  { href: "/admin/indukan", icon: Dna, label: "Indukan & Silsilah" },
   { href: "/admin/pesanan", icon: PackageSearch, label: "Pesanan" },
   { href: "/admin/laporan", icon: BarChart3, label: "Laporan" },
+  { href: "/admin/aktivitas", icon: History, label: "Aktivitas" },
   { href: "/admin/artikel", icon: BookOpenText, label: "Artikel Blog" },
   { href: "/admin/galeri", icon: Images, label: "Galeri" },
   { href: "/admin/testimoni", icon: Quote, label: "Testimoni" },

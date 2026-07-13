@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth";
+import { logActivity } from "@/lib/activity";
 
 const validStatuses = ["menunggu", "diproses", "dikirim", "selesai", "dibatalkan"];
 
@@ -66,6 +67,7 @@ export async function updateOrderStatus(id: string, formData: FormData): Promise
     }
   }
 
+  await logActivity("Status pesanan diubah", `${order.code}: ${before.status} → ${status}`);
   revalidatePath("/");
   revalidatePath("/sugar-glider");
   revalidatePath("/admin/pesanan");
@@ -73,6 +75,7 @@ export async function updateOrderStatus(id: string, formData: FormData): Promise
 
 export async function deleteOrder(id: string): Promise<void> {
   await requireAdmin();
-  await prisma.order.delete({ where: { id } });
+  const o = await prisma.order.delete({ where: { id } });
+  await logActivity("Pesanan dihapus", `${o.code} — ${o.customerName}`);
   revalidatePath("/admin/pesanan");
 }
