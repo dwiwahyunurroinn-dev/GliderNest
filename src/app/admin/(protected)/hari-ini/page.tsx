@@ -11,12 +11,16 @@ import { prisma } from "@/lib/db";
 import { getSettings } from "@/lib/settings";
 import { followupCutoff, formatPrice } from "@/lib/format";
 import { formatWaPhone, waTemplates } from "@/lib/wa-templates";
+import { countdownLabel, daysUntil, estimateBirth, estimateOop } from "@/lib/breeding";
+import { formatDate } from "@/lib/format";
+import { CalendarHeart } from "lucide-react";
+import Link2 from "next/link";
 import { updateOrderStatus } from "../pesanan/actions";
 
 export const dynamic = "force-dynamic";
 
 export default async function TodayPage() {
-  const [settings, tagih, kirim, perjalanan] = await Promise.all([
+  const [settings, tagih, kirim, perjalanan, breedings] = await Promise.all([
     getSettings(),
     prisma.order.findMany({
       where: { status: "menunggu", createdAt: { lt: followupCutoff() } },
@@ -30,9 +34,23 @@ export default async function TodayPage() {
       where: { status: "dikirim" },
       orderBy: { updatedAt: "asc" },
     }),
+    prisma.breeding.findMany({
+      where: { status: "berjalan" },
+      include: { sire: true, dam: true },
+      orderBy: { pairedAt: "asc" },
+    }),
   ]);
 
-  const totalTugas = tagih.length + kirim.length + perjalanan.length;
+  // agenda breeding yang jatuh tempo ≤ 7 hari lagi (atau sudah lewat)
+  const agenda = breedings
+    .flatMap((b) => [
+      { b, label: "Perkiraan lahir", date: estimateBirth(b.pairedAt) },
+      { b, label: "Perkiraan keluar kantung (OOP)", date: estimateOop(b.pairedAt) },
+    ])
+    .filter((a) => daysUntil(a.date) <= 7)
+    .sort((x, y) => x.date.getTime() - y.date.getTime());
+
+  const totalTugas = tagih.length + kirim.length + perjalanan.length + agenda.length;
 
   const sections = [
     {
@@ -84,6 +102,45 @@ export default async function TodayPage() {
         </div>
       ) : (
         <div className="mt-6 space-y-6">
+          {agenda.length > 0 && (
+            <section className="rounded-3xl border border-line bg-surface shadow-sm">
+              <div className="flex items-center gap-3 border-b border-line px-6 py-4">
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-pink-500/10 text-pink-500">
+                  <CalendarHeart className="h-5 w-5" />
+                </span>
+                <div>
+                  <h2 className="font-semibold">
+                    Agenda breeding{" "}
+                    <span className="ml-1 rounded-full bg-brand-soft px-2 py-0.5 text-xs font-bold text-brand-strong">
+                      {agenda.length}
+                    </span>
+                  </h2>
+                  <p className="text-xs text-muted">
+                    Perkiraan lahir/OOP dalam 7 hari ke depan — siapkan kandang & pantau indukan
+                  </p>
+                </div>
+              </div>
+              <ul className="divide-y divide-line/70">
+                {agenda.map((a, i) => (
+                  <li key={i} className="flex flex-wrap items-center justify-between gap-3 px-6 py-4">
+                    <p className="font-semibold">
+                      {a.b.sire.name} × {a.b.dam.name}
+                      <span className="ml-2 text-sm font-normal text-muted">{a.label}</span>
+                    </p>
+                    <p className="text-sm font-bold text-brand-strong">
+                      {formatDate(a.date)} · {countdownLabel(a.date)}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+              <p className="border-t border-line px-6 py-3 text-xs text-muted">
+                Kelola di{" "}
+                <Link2 href="/admin/breeding" className="font-semibold text-brand hover:text-brand-strong">
+                  Kalender Breeding
+                </Link2>
+              </p>
+            </section>
+          )}
           {sections.map(
             (sec) =>
               sec.orders.length > 0 && (

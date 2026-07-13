@@ -111,6 +111,45 @@ export async function adjustStock(id: string, delta: number): Promise<void> {
   revalidate();
 }
 
+/** Tambah catatan buku kesehatan (timbang berat / kondisi / obat). */
+export async function addHealthRecord(
+  gliderId: string,
+  formData: FormData
+): Promise<void> {
+  await requireAdmin();
+  const rawDate = String(formData.get("date") ?? "").trim();
+  const parsed = rawDate ? new Date(`${rawDate}T12:00:00`) : new Date();
+  const weightGram = Math.max(0, Number(formData.get("weightGram") ?? 0));
+  const note = String(formData.get("note") ?? "").trim();
+  if (weightGram === 0 && !note) return;
+
+  await prisma.healthRecord.create({
+    data: {
+      gliderId,
+      date: isNaN(parsed.getTime()) ? new Date() : parsed,
+      weightGram,
+      note,
+    },
+  });
+  const g = await prisma.glider.findUnique({ where: { id: gliderId } });
+  await logActivity(
+    "Buku kesehatan diisi",
+    `${g?.name ?? "?"}${weightGram ? ` — ${weightGram} gram` : ""}${note ? ` — ${note}` : ""}`
+  );
+  revalidatePath(`/admin/gliders/${gliderId}`);
+  revalidatePath("/sugar-glider");
+}
+
+export async function deleteHealthRecord(
+  gliderId: string,
+  recordId: string
+): Promise<void> {
+  await requireAdmin();
+  await prisma.healthRecord.delete({ where: { id: recordId } });
+  revalidatePath(`/admin/gliders/${gliderId}`);
+  revalidatePath("/sugar-glider");
+}
+
 export async function deleteGlider(id: string): Promise<void> {
   await requireAdmin();
   const g = await prisma.glider.delete({ where: { id } });

@@ -16,6 +16,7 @@ import {
   Dna,
   History,
   ReceiptText,
+  CalendarHeart,
 } from "lucide-react";
 import { credentialWarnings, requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/db";
@@ -29,6 +30,7 @@ const menu = [
   { href: "/admin/hari-ini", icon: CalendarCheck, label: "Hari Ini" },
   { href: "/admin/gliders", icon: PawPrint, label: "Sugar Glider & Stok" },
   { href: "/admin/indukan", icon: Dna, label: "Indukan & Silsilah" },
+  { href: "/admin/breeding", icon: CalendarHeart, label: "Kalender Breeding" },
   { href: "/admin/pesanan", icon: PackageSearch, label: "Pesanan" },
   { href: "/admin/laporan", icon: BarChart3, label: "Laporan" },
   { href: "/admin/pengeluaran", icon: ReceiptText, label: "Pengeluaran" },

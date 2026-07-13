@@ -33,6 +33,7 @@ model Glider {
   sireId      String?
   dam         Parent?    @relation("Dam", fields: [damId], references: [id], onDelete: SetNull)
   damId       String?
+  healthRecords HealthRecord[]
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 }
@@ -48,7 +49,36 @@ model Parent {
   imageUrl  String   @default("")
   sired     Glider[] @relation("Sire")
   mothered  Glider[] @relation("Dam")
+  pairingsAsSire Breeding[] @relation("BreedingSire")
+  pairingsAsDam  Breeding[] @relation("BreedingDam")
   createdAt DateTime @default(now())
+}
+
+// Kalender breeding: pasangan indukan + tanggal kawin.
+// Perkiraan lahir ≈ +16 hari; perkiraan out-of-pouch (OOP) ≈ +86 hari.
+model Breeding {
+  id        String    @id @default(cuid())
+  sire      Parent    @relation("BreedingSire", fields: [sireId], references: [id], onDelete: Cascade)
+  sireId    String
+  dam       Parent    @relation("BreedingDam", fields: [damId], references: [id], onDelete: Cascade)
+  damId     String
+  pairedAt  DateTime // tanggal dikawinkan
+  status    String    @default("berjalan") // berjalan | lahir | gagal
+  joeyCount Int       @default(0) // jumlah joey saat lahir
+  bornAt    DateTime? // tanggal lahir tercatat
+  note      String    @default("")
+  createdAt DateTime  @default(now())
+}
+
+// Buku kesehatan per glider: timbang berat, catatan kondisi/obat.
+model HealthRecord {
+  id         String   @id @default(cuid())
+  glider     Glider   @relation(fields: [gliderId], references: [id], onDelete: Cascade)
+  gliderId   String
+  date       DateTime
+  weightGram Int      @default(0) // 0 = tidak ditimbang saat itu
+  note       String   @default("")
+  createdAt  DateTime @default(now())
 }
 
 // Pengeluaran usaha — dasar perhitungan laba bersih di Laporan.

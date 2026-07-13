@@ -7,6 +7,7 @@ import { getSettings } from "@/lib/settings";
 import { formatPrice, morphGradient, splitTraits } from "@/lib/format";
 import { PawPrint } from "lucide-react";
 import { StatusPill } from "@/components/StatusPill";
+import { BarChart } from "@/components/admin/BarChart";
 import { WhatsAppCta } from "@/components/WhatsAppCta";
 
 export const dynamic = "force-dynamic";
@@ -34,11 +35,20 @@ export default async function GliderDetailPage({
   const [glider, settings] = await Promise.all([
     prisma.glider.findUnique({
       where: { slug },
-      include: { sire: true, dam: true },
+      include: { sire: true, dam: true, healthRecords: true },
     }),
     getSettings(),
   ]);
   if (!glider) notFound();
+
+  const weighed = glider.healthRecords
+    .filter((r) => r.weightGram > 0)
+    .sort((a, b) => a.date.getTime() - b.date.getTime())
+    .slice(-8);
+  const growthChart = weighed.map((r) => ({
+    label: new Intl.DateTimeFormat("id-ID", { day: "2-digit", month: "2-digit" }).format(r.date),
+    value: r.weightGram,
+  }));
 
   const [from, to] = morphGradient(glider.morph);
   const others = await prisma.glider.findMany({
@@ -190,6 +200,17 @@ export default async function GliderDetailPage({
               />
             )}
           </div>
+
+          {growthChart.length >= 2 && (
+            <div className="mt-6 rounded-3xl border border-line bg-surface p-5">
+              <p className="text-xs font-bold uppercase tracking-wide text-muted">
+                Riwayat pertumbuhan — ditimbang rutin oleh penangkar
+              </p>
+              <div className="mt-3">
+                <BarChart data={growthChart} height={110} formatValue={(v) => `${v}g`} />
+              </div>
+            </div>
+          )}
 
           <p className="mt-5 flex items-start gap-2 text-xs text-muted">
             <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
