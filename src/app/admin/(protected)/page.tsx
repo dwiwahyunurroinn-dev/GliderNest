@@ -6,9 +6,10 @@ import {
   TrendingUp,
   ArrowRight,
   AlertTriangle,
+  AlarmClock,
 } from "lucide-react";
 import { prisma } from "@/lib/db";
-import { formatPrice, orderStatusLabel } from "@/lib/format";
+import { followupCutoff, formatPrice, orderStatusLabel } from "@/lib/format";
 import { getMonthlyRevenue } from "@/lib/reports";
 import { BarChart } from "@/components/admin/BarChart";
 
@@ -23,6 +24,7 @@ export default async function AdminDashboard() {
     latestOrders,
     lowStock,
     monthly,
+    followupCount,
   ] = await Promise.all([
     prisma.order.aggregate({ where: { status: "selesai" }, _sum: { amount: true } }),
     prisma.order.count({ where: { status: "selesai" } }),
@@ -34,6 +36,9 @@ export default async function AdminDashboard() {
       take: 4,
     }),
     getMonthlyRevenue(6),
+    prisma.order.count({
+      where: { status: "menunggu", createdAt: { lt: followupCutoff() } },
+    }),
   ]);
 
   const stats = [
@@ -75,6 +80,20 @@ export default async function AdminDashboard() {
       <p className="mt-1 text-sm text-muted">
         Ringkasan bisnis Anda hari ini.
       </p>
+
+      {followupCount > 0 && (
+        <Link
+          href="/admin/pesanan?status=followup"
+          className="mt-4 flex items-center justify-between gap-2 rounded-2xl border border-red-200 bg-red-50 px-5 py-3.5 text-sm font-semibold text-red-600 transition-colors hover:bg-red-100"
+        >
+          <span className="flex items-center gap-2">
+            <AlarmClock className="h-4.5 w-4.5" />
+            {followupCount} pesanan menunggu pembayaran &gt; 24 jam — segera
+            follow-up
+          </span>
+          <ArrowRight className="h-4 w-4" />
+        </Link>
+      )}
 
       {/* Kartu statistik gaya Materio */}
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

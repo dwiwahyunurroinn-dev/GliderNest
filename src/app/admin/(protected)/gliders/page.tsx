@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { Plus, Pencil, Minus } from "lucide-react";
+import { Plus, Pencil, Minus, Search } from "lucide-react";
 import { prisma } from "@/lib/db";
+import { inputCls } from "@/components/admin/ui";
 import { formatPrice } from "@/lib/format";
 import { StatusPill } from "@/components/StatusPill";
 import { DeleteButton } from "@/components/admin/DeleteButton";
@@ -9,9 +10,29 @@ import { adjustStock, deleteGlider } from "./actions";
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminGlidersPage() {
-  const gliders = await prisma.glider.findMany({
+const statusFilters = [
+  { value: "semua", label: "Semua" },
+  { value: "tersedia", label: "Tersedia" },
+  { value: "dipesan", label: "Dipesan" },
+  { value: "terjual", label: "Terjual" },
+];
+
+export default async function AdminGlidersPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string; status?: string }>;
+}) {
+  const { q = "", status = "semua" } = await searchParams;
+  const all = await prisma.glider.findMany({
     orderBy: { createdAt: "desc" },
+  });
+
+  const query = q.trim().toLowerCase();
+  const gliders = all.filter((g) => {
+    if (status !== "semua" && g.status !== status) return false;
+    if (query && !`${g.name} ${g.morph}`.toLowerCase().includes(query))
+      return false;
+    return true;
   });
 
   return (
@@ -31,7 +52,42 @@ export default async function AdminGlidersPage() {
         </Link>
       </div>
 
-      <div className="mt-6 overflow-hidden rounded-3xl border border-line bg-surface shadow-sm">
+      {/* Pencarian & filter */}
+      <form action="/admin/gliders" className="mt-5 flex gap-2">
+        <input type="hidden" name="status" value={status} />
+        <div className="relative flex-1">
+          <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
+          <input
+            name="q"
+            defaultValue={q}
+            placeholder="Cari nama atau morph…"
+            className={`${inputCls} mt-0 pl-10`}
+          />
+        </div>
+        <button
+          type="submit"
+          className="rounded-xl bg-brand px-5 text-sm font-semibold text-white transition-colors hover:bg-brand-strong"
+        >
+          Cari
+        </button>
+      </form>
+      <div className="mt-3 flex flex-wrap gap-2">
+        {statusFilters.map((f) => (
+          <Link
+            key={f.value}
+            href={`/admin/gliders?status=${f.value}${q ? `&q=${encodeURIComponent(q)}` : ""}`}
+            className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors ${
+              status === f.value
+                ? "bg-brand text-white shadow-sm"
+                : "border border-line bg-surface text-muted hover:border-brand hover:text-brand-strong"
+            }`}
+          >
+            {f.label}
+          </Link>
+        ))}
+      </div>
+
+      <div className="mt-5 overflow-hidden rounded-3xl border border-line bg-surface shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>

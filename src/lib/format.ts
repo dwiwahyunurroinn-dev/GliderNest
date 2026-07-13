@@ -53,6 +53,11 @@ export const orderStatusLabel: Record<string, string> = {
   dibatalkan: "Dibatalkan",
 };
 
+/** Batas waktu follow-up: pesanan menunggu yang dibuat sebelum ini perlu ditindak. */
+export function followupCutoff(): Date {
+  return new Date(Date.now() - 24 * 60 * 60 * 1000);
+}
+
 export const paymentMethodLabel: Record<string, string> = {
   qris: "QRIS",
   transfer: "Transfer Bank / M-Banking",

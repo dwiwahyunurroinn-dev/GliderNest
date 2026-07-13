@@ -1,17 +1,26 @@
 import Link from "next/link";
-import { Plus, Pencil } from "lucide-react";
+import { Plus, Pencil, Search } from "lucide-react";
 import { prisma } from "@/lib/db";
 import { formatDate } from "@/lib/format";
 import { DeleteButton } from "@/components/admin/DeleteButton";
-import { btnPrimary } from "@/components/admin/ui";
+import { btnPrimary, inputCls } from "@/components/admin/ui";
 import { deleteArticle } from "./actions";
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminArticlesPage() {
-  const articles = await prisma.article.findMany({
+export default async function AdminArticlesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string }>;
+}) {
+  const { q = "" } = await searchParams;
+  const all = await prisma.article.findMany({
     orderBy: { createdAt: "desc" },
   });
+  const query = q.trim().toLowerCase();
+  const articles = query
+    ? all.filter((a) => a.title.toLowerCase().includes(query))
+    : all;
 
   return (
     <div>
@@ -30,7 +39,25 @@ export default async function AdminArticlesPage() {
         </Link>
       </div>
 
-      <div className="mt-6 space-y-3">
+      <form action="/admin/artikel" className="mt-5 flex gap-2">
+        <div className="relative flex-1">
+          <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
+          <input
+            name="q"
+            defaultValue={q}
+            placeholder="Cari judul artikel…"
+            className={`${inputCls} mt-0 pl-10`}
+          />
+        </div>
+        <button
+          type="submit"
+          className="rounded-xl bg-brand px-5 text-sm font-semibold text-white transition-colors hover:bg-brand-strong"
+        >
+          Cari
+        </button>
+      </form>
+
+      <div className="mt-5 space-y-3">
         {articles.map((a) => (
           <div
             key={a.id}
