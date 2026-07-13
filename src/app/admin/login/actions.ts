@@ -17,7 +17,7 @@ export async function login(formData: FormData): Promise<void> {
   }
 
   const password = String(formData.get("password") ?? "");
-  if (!checkPassword(password)) {
+  if (!(await checkPassword(password))) {
     redirect("/admin/login?error=1");
   }
   await createSession();

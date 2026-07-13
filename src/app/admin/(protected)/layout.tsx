@@ -13,7 +13,7 @@ import {
   Bell,
   BarChart3,
 } from "lucide-react";
-import { requireAdmin, usingDefaultCredentials } from "@/lib/auth";
+import { credentialWarnings, requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { getSettings } from "@/lib/settings";
 import { BrandMark } from "@/components/BrandMark";
@@ -38,9 +38,10 @@ export default async function AdminLayout({
   children: React.ReactNode;
 }) {
   await requireAdmin();
-  const [settings, unreadCount] = await Promise.all([
+  const [settings, unreadCount, warnings] = await Promise.all([
     getSettings(),
     prisma.notification.count({ where: { read: false } }),
+    credentialWarnings(),
   ]);
 
   return (
@@ -152,12 +153,20 @@ export default async function AdminLayout({
           </nav>
         </header>
 
-        {usingDefaultCredentials() && (
+        {warnings.defaultPassword && (
           <p className="mx-5 mt-4 rounded-2xl border border-amber-300 bg-amber-50 px-4 py-3 text-xs font-semibold text-amber-800 sm:mx-8">
-            ⚠ Anda masih memakai password/kunci bawaan. Sebelum website
-            di-online-kan, buat file <code>.env</code> (contoh di{" "}
-            <code>.env.example</code>) lalu isi ADMIN_PASSWORD dan AUTH_SECRET
-            dengan nilai rahasia Anda sendiri, kemudian restart server.
+            ⚠ Password admin masih bawaan. Ganti sekarang lewat{" "}
+            <Link href="/admin/pengaturan" className="underline">
+              Pengaturan → Keamanan
+            </Link>
+            .
+          </p>
+        )}
+        {warnings.missingAuthSecret && (
+          <p className="mx-5 mt-4 rounded-2xl border border-amber-300 bg-amber-50 px-4 py-3 text-xs font-semibold text-amber-800 sm:mx-8">
+            ⚠ AUTH_SECRET belum di-set. Sebelum online, isi di file{" "}
+            <code>.env</code> (contoh ada di <code>.env.example</code>) lalu
+            restart server.
           </p>
         )}
         <div className="mx-auto w-full max-w-6xl flex-1 p-5 sm:p-8">{children}</div>

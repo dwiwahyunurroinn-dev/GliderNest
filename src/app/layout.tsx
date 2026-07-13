@@ -19,6 +19,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const s = await getSettings();
   return {
     metadataBase: new URL(process.env.SITE_URL ?? "https://glidernest.id"),
+    // favicon bisa diganti dari Admin → Pengaturan → Logo & Maskot
+    icons: { icon: s.faviconUrl || "/favicon.ico" },
     title: {
       default: `${s.siteName} — ${s.tagline}`,
       template: `%s — ${s.siteName}`,

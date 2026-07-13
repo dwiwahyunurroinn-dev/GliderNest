@@ -1,17 +1,28 @@
-import { CheckCircle2, Save } from "lucide-react";
+import { CheckCircle2, Save, AlertCircle, LockKeyhole } from "lucide-react";
 import { getSettings } from "@/lib/settings";
 import { inputCls, labelCls, btnPrimary } from "@/components/admin/ui";
 import { ImageInput } from "@/components/admin/ImageInput";
-import { updateSettings } from "./actions";
+import { changeAdminPassword, updateSettings } from "./actions";
 
 export const dynamic = "force-dynamic";
+
+const pwMessages: Record<string, { ok: boolean; text: string }> = {
+  ok: { ok: true, text: "Password admin berhasil diganti. Gunakan password baru saat login berikutnya." },
+  salah: { ok: false, text: "Password saat ini salah — perubahan dibatalkan." },
+  pendek: { ok: false, text: "Password baru minimal 8 karakter." },
+  beda: { ok: false, text: "Konfirmasi password tidak sama dengan password baru." },
+};
 
 export default async function AdminSettingsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ saved?: string }>;
+  searchParams: Promise<{ saved?: string; pw?: string }>;
 }) {
-  const [settings, { saved }] = await Promise.all([getSettings(), searchParams]);
+  const [settings, { saved, pw }] = await Promise.all([
+    getSettings(),
+    searchParams,
+  ]);
+  const pwMsg = pw ? pwMessages[pw] : undefined;
 
   return (
     <div>
@@ -119,6 +130,34 @@ export default async function AdminSettingsPage({
               ) : (
                 <p className="mt-1.5 text-xs text-muted">
                   Belum ada gambar maskot tersimpan.
+                </p>
+              )}
+            </div>
+            <div>
+              <label htmlFor="faviconImage" className={labelCls}>
+                Favicon{" "}
+                <span className="font-normal text-muted">
+                  (ikon kecil di tab & alamat browser; gunakan gambar persegi,
+                  minimal 64×64px — PNG paling bagus)
+                </span>
+              </label>
+              <ImageInput id="faviconImage" name="faviconImage" aspect={1} previewHeight="h-32" />
+              {settings.faviconUrl ? (
+                <div className="mt-3 flex items-center gap-4">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={settings.faviconUrl}
+                    alt="Favicon"
+                    className="h-10 w-10 rounded-lg border border-line object-contain"
+                  />
+                  <label className="flex items-center gap-2 text-xs font-medium text-red-600">
+                    <input type="checkbox" name="resetFavicon" className="h-3.5 w-3.5 accent-red-600" />
+                    Hapus & kembalikan ke favicon bawaan
+                  </label>
+                </div>
+              ) : (
+                <p className="mt-1.5 text-xs text-muted">
+                  Belum ada favicon kustom — memakai ikon bawaan.
                 </p>
               )}
             </div>
@@ -256,6 +295,93 @@ export default async function AdminSettingsPage({
           Simpan Semua Pengaturan
         </button>
       </form>
+
+      {/* Ganti password admin */}
+      <section
+        id="keamanan"
+        className="mt-8 rounded-3xl border border-line bg-surface p-6 shadow-sm sm:p-8"
+      >
+        <h2 className="flex items-center gap-2 font-semibold">
+          <LockKeyhole className="h-4.5 w-4.5 text-brand" />
+          Keamanan — Ganti Password Admin
+        </h2>
+        <p className="mt-2 text-sm text-muted">
+          Password baru langsung berlaku dan tersimpan aman (ter-hash) di
+          database — tidak perlu mengubah file .env atau me-restart server.
+        </p>
+
+        {pwMsg && (
+          <p
+            className={`mt-4 flex items-center gap-2 rounded-2xl px-4 py-3 text-sm font-semibold ${
+              pwMsg.ok
+                ? "bg-brand-soft text-brand-strong"
+                : "bg-red-500/10 text-red-500"
+            }`}
+          >
+            {pwMsg.ok ? (
+              <CheckCircle2 className="h-4 w-4 shrink-0" />
+            ) : (
+              <AlertCircle className="h-4 w-4 shrink-0" />
+            )}
+            {pwMsg.text}
+          </p>
+        )}
+
+        <form action={changeAdminPassword} className="mt-5 space-y-4">
+          <div className="grid gap-4 sm:grid-cols-3">
+            <div>
+              <label htmlFor="currentPassword" className={labelCls}>
+                Password saat ini
+              </label>
+              <input
+                id="currentPassword"
+                name="currentPassword"
+                type="password"
+                required
+                autoComplete="current-password"
+                className={inputCls}
+              />
+            </div>
+            <div>
+              <label htmlFor="newPassword" className={labelCls}>
+                Password baru
+              </label>
+              <input
+                id="newPassword"
+                name="newPassword"
+                type="password"
+                required
+                minLength={8}
+                autoComplete="new-password"
+                className={inputCls}
+              />
+            </div>
+            <div>
+              <label htmlFor="confirmPassword" className={labelCls}>
+                Ulangi password baru
+              </label>
+              <input
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                required
+                minLength={8}
+                autoComplete="new-password"
+                className={inputCls}
+              />
+            </div>
+          </div>
+          <button type="submit" className={btnPrimary}>
+            <LockKeyhole className="h-4 w-4" />
+            Ganti Password
+          </button>
+          <p className="text-xs text-muted">
+            Minimal 8 karakter — disarankan 12+ dengan campuran huruf besar,
+            kecil, dan angka. Simpan di tempat aman; jika lupa, pulihkan lewat
+            variabel ADMIN_PASSWORD di file .env.
+          </p>
+        </form>
+      </section>
 
       <section className="mt-8 rounded-3xl border border-line bg-surface p-6 shadow-sm sm:p-8">
         <h2 className="font-semibold">Cadangan Data (Backup)</h2>

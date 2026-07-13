@@ -128,5 +128,9 @@ model Setting {
   rekberInfo   String @default("") // jasa rekber yang didukung, satu per baris
   logoUrl      String @default("") // logo di header/footer; kosong = pakai maskot bawaan
   mascotUrl    String @default("") // gambar maskot kustom; kosong = pakai maskot SVG bawaan
+  faviconUrl   String @default("") // ikon tab/alamat browser; kosong = favicon bawaan
+  // hash password admin (scrypt, format salt:hash) — menggantikan ADMIN_PASSWORD
+  // di .env begitu diisi lewat menu Pengaturan → Keamanan
+  adminPasswordHash String @default("")
   foundedYear  Int    @default(2019)
 }
