@@ -13,7 +13,7 @@ import {
   Bell,
   BarChart3,
 } from "lucide-react";
-import { requireAdmin } from "@/lib/auth";
+import { requireAdmin, usingDefaultCredentials } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { getSettings } from "@/lib/settings";
 import { BrandMark } from "@/components/BrandMark";
@@ -152,6 +152,14 @@ export default async function AdminLayout({
           </nav>
         </header>
 
+        {usingDefaultCredentials() && (
+          <p className="mx-5 mt-4 rounded-2xl border border-amber-300 bg-amber-50 px-4 py-3 text-xs font-semibold text-amber-800 sm:mx-8">
+            ⚠ Anda masih memakai password/kunci bawaan. Sebelum website
+            di-online-kan, buat file <code>.env</code> (contoh di{" "}
+            <code>.env.example</code>) lalu isi ADMIN_PASSWORD dan AUTH_SECRET
+            dengan nilai rahasia Anda sendiri, kemudian restart server.
+          </p>
+        )}
         <div className="mx-auto w-full max-w-6xl flex-1 p-5 sm:p-8">{children}</div>
       </div>
     </div>

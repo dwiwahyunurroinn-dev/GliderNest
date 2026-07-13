@@ -34,7 +34,10 @@ export default async function PublicLayout({
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        // ganti "<" agar isi pengaturan tidak bisa menutup tag script (XSS)
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+        }}
       />
       <SiteHeader siteName={settings.siteName} logoUrl={settings.logoUrl} />
       {/* padding bawah di HP/tablet memberi ruang untuk bar navigasi bawah */}

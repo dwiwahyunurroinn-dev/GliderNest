@@ -73,7 +73,9 @@ export default async function AdminLoginPage({
           {error && (
             <p className="mt-6 flex items-center gap-2 rounded-2xl bg-red-500/10 px-4 py-3 text-sm font-semibold text-red-500">
               <AlertCircle className="h-4 w-4 shrink-0" />
-              Password salah, silakan coba lagi.
+              {error === "batas"
+                ? "Terlalu banyak percobaan login. Tunggu 5 menit lalu coba lagi."
+                : "Password salah, silakan coba lagi."}
             </p>
           )}
 

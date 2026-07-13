@@ -65,7 +65,9 @@ export default async function GliderDetailPage({
     <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(productJsonLd).replace(/</g, "\\u003c"),
+        }}
       />
       <Link
         href="/sugar-glider"

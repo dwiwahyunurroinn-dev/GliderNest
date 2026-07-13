@@ -14,6 +14,29 @@ const nextConfig: NextConfig = {
     "172.16.*.*",
     "*.local",
   ],
+  experimental: {
+    serverActions: {
+      // upload foto dari admin bisa melebihi batas bawaan 1MB
+      bodySizeLimit: "8mb",
+    },
+  },
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          // cegah website dibungkus iframe situs lain (clickjacking)
+          { key: "X-Frame-Options", value: "DENY" },
+          // cegah browser menebak-nebak tipe file (MIME sniffing)
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          // jangan bocorkan URL lengkap saat pengunjung klik link keluar
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          // matikan akses sensor yang tidak dipakai website ini
+          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+        ],
+      },
+    ];
+  },
   async redirects() {
     return [
       {

@@ -1,15 +1,17 @@
 "use server";
 
+import { randomInt } from "node:crypto";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { rateLimit } from "@/lib/rate-limit";
 
 function generateOrderCode(): string {
+  // randomInt (kriptografis) — kode pesanan tidak bisa ditebak polanya
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   let code = "GN-";
   for (let i = 0; i < 6; i++) {
-    code += chars[Math.floor(Math.random() * chars.length)];
+    code += chars[randomInt(chars.length)];
   }
   return code;
 }
