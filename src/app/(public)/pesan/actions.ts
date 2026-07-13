@@ -1,7 +1,9 @@
 "use server";
 
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
+import { rateLimit } from "@/lib/rate-limit";
 
 function generateOrderCode(): string {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -14,6 +16,22 @@ function generateOrderCode(): string {
 
 export async function createOrder(formData: FormData): Promise<void> {
   const gliderSlug = String(formData.get("glider") ?? "");
+
+  // Honeypot: kolom tersembunyi yang hanya diisi bot spam.
+  if (String(formData.get("website") ?? "").trim() !== "") {
+    redirect(`/pesan?glider=${gliderSlug}&error=lengkapi`);
+  }
+
+  // Batasi 5 pesanan per 10 menit per alamat IP.
+  const h = await headers();
+  const ip =
+    h.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    h.get("x-real-ip") ||
+    "tanpa-ip";
+  if (!rateLimit(`order:${ip}`, 5, 10 * 60 * 1000)) {
+    redirect(`/pesan?glider=${gliderSlug}&error=batas`);
+  }
+
   const customerName = String(formData.get("name") ?? "").trim();
   const phone = String(formData.get("phone") ?? "").trim();
   const address = String(formData.get("address") ?? "").trim();

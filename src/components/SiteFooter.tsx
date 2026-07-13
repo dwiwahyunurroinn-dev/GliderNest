@@ -120,6 +120,14 @@ export function SiteFooter({ settings }: { settings: Settings }) {
       <div className="border-t border-white/10 py-5 text-center text-xs text-blue-100/40">
         © {new Date().getFullYear()} {settings.siteName}. Seluruh glider hasil
         penangkaran legal & etis ·{" "}
+        <Link href="/kebijakan-privasi" className="transition-colors hover:text-white">
+          Kebijakan Privasi
+        </Link>{" "}
+        ·{" "}
+        <Link href="/syarat-ketentuan" className="transition-colors hover:text-white">
+          Syarat & Ketentuan
+        </Link>{" "}
+        ·{" "}
         <Link href="/admin" className="transition-colors hover:text-white">
           Admin
         </Link>

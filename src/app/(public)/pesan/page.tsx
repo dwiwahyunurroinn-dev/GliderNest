@@ -29,6 +29,8 @@ const errorMessages: Record<string, string> = {
   metode: "Metode pembayaran tidak valid, silakan pilih ulang.",
   "tidak-tersedia":
     "Maaf, glider tersebut sudah tidak tersedia. Silakan pilih glider lain.",
+  batas:
+    "Terlalu banyak pesanan dari perangkat ini dalam waktu singkat. Tunggu beberapa menit lalu coba lagi, atau hubungi kami via WhatsApp.",
 };
 
 export default async function OrderPage({
@@ -201,6 +203,16 @@ export default async function OrderPage({
                 className="mt-2 w-full rounded-2xl border border-line bg-background px-4 py-3 text-sm outline-none transition-colors focus:border-brand"
               />
             </div>
+
+            {/* Honeypot anti-bot: tidak terlihat manusia, diisi bot spam */}
+            <input
+              type="text"
+              name="website"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              className="absolute -left-[9999px] h-0 w-0 opacity-0"
+            />
 
             <button
               type="submit"

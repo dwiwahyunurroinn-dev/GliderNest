@@ -256,6 +256,24 @@ export default async function AdminSettingsPage({
           Simpan Semua Pengaturan
         </button>
       </form>
+
+      <section className="mt-8 rounded-3xl border border-line bg-surface p-6 shadow-sm sm:p-8">
+        <h2 className="font-semibold">Cadangan Data (Backup)</h2>
+        <p className="mt-2 text-sm leading-relaxed text-muted">
+          Unduh salinan seluruh database — katalog, pesanan, artikel,
+          testimoni, dan pengaturan — sebagai satu file. Simpan rutin
+          (misal seminggu sekali) di Google Drive atau flashdisk. Jika terjadi
+          hal buruk pada komputer/server, data bisa dipulihkan dari file ini
+          dengan menaruhnya kembali sebagai <code>prisma/dev.db</code>.
+        </p>
+        <a
+          href="/api/admin/backup"
+          className="mt-4 inline-flex items-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-strong"
+        >
+          <Save className="h-4 w-4" />
+          Unduh Backup Database
+        </a>
+      </section>
     </div>
   );
 }
