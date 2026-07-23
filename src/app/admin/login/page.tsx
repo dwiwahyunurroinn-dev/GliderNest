@@ -99,10 +99,6 @@ export default async function AdminLoginPage({
               Masuk
             </button>
           </form>
-          <p className="mt-6 text-center text-xs text-muted">
-            Password bawaan <code className="rounded bg-brand-soft px-1.5 py-0.5">glidernest123</code>{" "}
-            — ubah lewat ADMIN_PASSWORD di file .env
-          </p>
         </div>
       </div>
     </div>
