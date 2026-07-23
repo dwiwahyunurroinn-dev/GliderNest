@@ -13,6 +13,8 @@ const nextConfig: NextConfig = {
     "10.*.*.*",
     "172.16.*.*",
     "*.local",
+    // izinkan akses lewat Cloudflare Tunnel sementara (demo publik)
+    "*.trycloudflare.com",
   ],
   experimental: {
     serverActions: {
