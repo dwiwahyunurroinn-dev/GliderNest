@@ -111,12 +111,6 @@ export default async function HomePage() {
 
         <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 py-20 sm:px-6 md:grid-cols-[1.1fr_0.9fr] md:py-28">
           <div>
-            <Reveal>
-              <p className="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-4 py-1.5 text-xs font-semibold tracking-wide text-brand-strong shadow-sm">
-                <span className="h-2 w-2 animate-pulse rounded-full bg-brand" />
-                Peternakan aktif sejak {settings.foundedYear} · {settings.address}
-              </p>
-            </Reveal>
             <Reveal delay={100}>
               <h1 className="mt-6 font-[family-name:var(--font-display)] text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl md:text-6xl">
                 Sahabat kecil yang{" "}
